@@ -2,10 +2,17 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,47 +22,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.unlam.mobile.scaffolding.R
-import ar.edu.unlam.mobile.scaffolding.ui.components.Greeting
-
-const val HOME_SCREEN_ROUTE = "home"
+import ar.edu.unlam.mobile.scaffolding.data.datasources.local.PersonaEntity
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
+fun HomeScreen(modifier: Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    // La información que obtenemos desde el view model la consumimos a través de un estado de
-    // "tres vías": Loading, Success y Error. Esto nos permite mostrar un estado de carga,
-    // un estado de éxito y un mensaje de error.
-    val uiState: HomeUIState by viewModel.uiState.collectAsState()
+   SuccessScreen(viewModel)
 
-    when (val helloState = uiState.helloMessageState) {
-        is HelloMessageUIState.Loading -> {
-            // Loading
-        }
-
-        is HelloMessageUIState.Success -> {
-            Column {
-                Greeting(helloState.message, modifier)
-              Success()
-            }
-        }
-
-        is HelloMessageUIState.Error -> {
-            // Error
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Success(){
-    Column {
+fun SuccessScreen(vm: HomeViewModel) {
+    val personas by vm.personas.collectAsState()
+
+    Column(modifier = Modifier.padding(all = 10.dp)) {
         imagen()
-        SearchBar()
-        ListaResultados()
+        SearchBar(
+            onBotonClick = { vm.insertarAll() },
+            borrarClick = {vm.deleteAll()}
+        )
+        ListaResultados(personas)
+
     }
 
 
@@ -65,12 +58,16 @@ fun Success(){
 fun imagen(){
     Image(
         painter = painterResource(R.drawable.casa),
-        contentDescription = "casita"
+        contentDescription = "casita",
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(230.dp)
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(){
+fun SearchBar(modifier: Modifier = Modifier.fillMaxWidth(),
+              onBotonClick: () -> Unit,borrarClick:()-> Unit){
     // Estado para el texto de la búsqueda
     var query by remember { mutableStateOf("") }
     // Estado para ver si la barra está activa
@@ -83,13 +80,48 @@ fun SearchBar(){
         active = active, // El estado de activación
         onActiveChange = { active = it }, // Función que actualiza el estado de activación
 
-        placeholder = { Text("Buscar...") } // Texto temporal de ayuda
+        placeholder = { Text("Buscar...") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .width(150.dp)// Texto temporal de ayuda
     ) {
         Text("...Sugerencias de búsqueda...")
     }
+    Button(
+        onClick = onBotonClick
+    ) {
+        Text(text = "CARGAR DATOS")
+        //carga datos iniciales de prueba en la BD
+    }
+    Button(
+        onClick = borrarClick
+    ) {
+        Text(text = "BORRAR DATOS")
+    }
+
+
 }
+
+
+
 @Composable
-fun ListaResultados(){
+fun ListaResultados(personas: List<PersonaEntity>) {
+Text("Lista de personas "+personas.size.toString())
+
+    //filtra por personas de casanova, resta implementar
+    // el filtro mediante busqueda con el search bar
+var listaFiltrada = personas.filter { it.ciudad == "Isidro Casanova" }
+
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(listaFiltrada){
+            it ->
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Text(text = it.nombre)
+                Text(text = it.ciudad)
+
+            }
+        }
+    }
 
 }
 
