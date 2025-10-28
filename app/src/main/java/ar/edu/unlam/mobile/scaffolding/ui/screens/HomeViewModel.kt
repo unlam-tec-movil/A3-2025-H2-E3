@@ -33,10 +33,22 @@ class HomeViewModel
             viewModelScope.launch {
                 // valores hardcodeados para probar la lista de la screen
                 personaDao.insertarPersonas(
-                    PersonaEntity(nombre = "Belen Sosa", dni = 28987654L, profesional = false, ubicacion = null, ciudad = "Ramos Mejía"),
+                    PersonaEntity(
+                        nombre = "Belen Sosa",
+                        dni = 28987654L,
+                        profesional = false,
+                        ubicacion = null,
+                        ciudad = "Ramos Mejía",
+                    ),
                 )
                 personaDao.insertarPersonas(
-                    PersonaEntity(nombre = "Carlos Perez", dni = 39001202L, profesional = true, ubicacion = null, ciudad = "Laferrere"),
+                    PersonaEntity(
+                        nombre = "Carlos Perez",
+                        dni = 39001202L,
+                        profesional = true,
+                        ubicacion = null,
+                        ciudad = "Laferrere",
+                    ),
                 )
                 personaDao.insertarPersonas(
                     PersonaEntity(
@@ -111,7 +123,13 @@ class HomeViewModel
                     ),
                 )
                 personaDao.insertarPersonas(
-                    PersonaEntity(nombre = "Laura Varela", dni = 34987654L, profesional = true, ubicacion = null, ciudad = "Laferrere"),
+                    PersonaEntity(
+                        nombre = "Laura Varela",
+                        dni = 34987654L,
+                        profesional = true,
+                        ubicacion = null,
+                        ciudad = "Laferrere",
+                    ),
                 )
                 personaDao.insertarPersonas(
                     PersonaEntity(

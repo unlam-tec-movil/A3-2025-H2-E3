@@ -40,14 +40,20 @@ fun HomeScreen(
 @Composable
 fun SuccessScreen(vm: HomeViewModel) {
     val personas by vm.personas.collectAsState()
+    var query by remember { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(all = 10.dp)) {
         imagen()
         SearchBar(
+            query = query,
+            onQueryChange = { query = it },
+            active = active,
+            onActiveChange = { active = it },
             onBotonClick = { vm.insertarAll() },
             borrarClick = { vm.deleteAll() },
         )
-        ListaResultados(personas)
+        ListaResultados(personas, query)
     }
 }
 
@@ -67,25 +73,24 @@ fun imagen() {
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier.fillMaxWidth(),
+    query: String,
+    onQueryChange: (String) -> Unit,
+    active: Boolean,
+    onActiveChange: (Boolean) -> Unit,
     onBotonClick: () -> Unit,
     borrarClick: () -> Unit,
 ) {
-    // Estado para el texto de la búsqueda
-    var query by remember { mutableStateOf("") }
-    // Estado para ver si la barra está activa
-    var active by remember { mutableStateOf(false) }
-
     DockedSearchBar(
         query = query, // El texto actual (vacío inicialmente)
-        onQueryChange = { query = it }, // Función que actualiza el texto
-        onSearch = { active = false }, // Función que se ejecuta al presionar Buscar
+        onQueryChange = onQueryChange, // actualiza el texto
+        onSearch = { onActiveChange(false) }, // ejecuta al presionar Buscar
         active = active, // El estado de activación
-        onActiveChange = { active = it }, // Función que actualiza el estado de activación
+        onActiveChange = onActiveChange, // actualiza el estado de activación
         placeholder = { Text("Buscar...") },
         modifier =
             Modifier
                 .fillMaxWidth()
-                .width(150.dp), // Texto temporal de ayuda
+                .width(150.dp),
     ) {
         Text("...Sugerencias de búsqueda...")
     }
@@ -103,12 +108,13 @@ fun SearchBar(
 }
 
 @Composable
-fun ListaResultados(personas: List<PersonaEntity>) {
+fun ListaResultados(
+    personas: List<PersonaEntity>,
+    parametroBusqueda: String,
+) {
     Text("Lista de personas " + personas.size.toString())
-
-    // filtra por personas de casanova, resta implementar
-    // el filtro mediante busqueda con el search bar
-    var listaFiltrada = personas.filter { it.ciudad == "Isidro Casanova" }
+    // var parametro: String = ""
+    var listaFiltrada = personas.filter { it.ciudad.contains(parametroBusqueda.trim(), ignoreCase = true) }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(listaFiltrada) { it ->
