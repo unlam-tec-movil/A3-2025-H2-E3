@@ -7,13 +7,12 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface PersonaDao{
-
+interface PersonaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarPersonas(persona: PersonaEntity)
 
     @Query("SELECT * FROM persona")
-    fun selectasteriscoPersona() : Flow<List<PersonaEntity>>
+    fun selectasteriscoPersona(): Flow<List<PersonaEntity>>
 
     @Query("DELETE FROM persona")
     suspend fun eliminarTodasLasPersonas()

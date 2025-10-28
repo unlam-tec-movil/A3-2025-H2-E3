@@ -6,8 +6,8 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [PersonaEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
-abstract class AppDataBase : RoomDatabase(){
+abstract class AppDataBase : RoomDatabase() {
     abstract fun personaDao(): PersonaDao
 }

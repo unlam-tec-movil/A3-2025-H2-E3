@@ -29,11 +29,11 @@ import ar.edu.unlam.mobile.scaffolding.R
 import ar.edu.unlam.mobile.scaffolding.data.datasources.local.PersonaEntity
 
 @Composable
-fun HomeScreen(modifier: Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
+fun HomeScreen(
+    modifier: Modifier,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-   SuccessScreen(viewModel)
-
+    SuccessScreen(viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,29 +45,31 @@ fun SuccessScreen(vm: HomeViewModel) {
         imagen()
         SearchBar(
             onBotonClick = { vm.insertarAll() },
-            borrarClick = {vm.deleteAll()}
+            borrarClick = { vm.deleteAll() },
         )
         ListaResultados(personas)
-
     }
-
-
 }
 
 @Composable
-fun imagen(){
+fun imagen() {
     Image(
         painter = painterResource(R.drawable.casa),
         contentDescription = "casita",
-        modifier = Modifier
-            .fillMaxWidth()
-            .size(230.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .size(230.dp),
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier = Modifier.fillMaxWidth(),
-              onBotonClick: () -> Unit,borrarClick:()-> Unit){
+fun SearchBar(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    onBotonClick: () -> Unit,
+    borrarClick: () -> Unit,
+) {
     // Estado para el texto de la búsqueda
     var query by remember { mutableStateOf("") }
     // Estado para ver si la barra está activa
@@ -79,54 +81,41 @@ fun SearchBar(modifier: Modifier = Modifier.fillMaxWidth(),
         onSearch = { active = false }, // Función que se ejecuta al presionar Buscar
         active = active, // El estado de activación
         onActiveChange = { active = it }, // Función que actualiza el estado de activación
-
         placeholder = { Text("Buscar...") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .width(150.dp)// Texto temporal de ayuda
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .width(150.dp), // Texto temporal de ayuda
     ) {
         Text("...Sugerencias de búsqueda...")
     }
     Button(
-        onClick = onBotonClick
+        onClick = onBotonClick,
     ) {
         Text(text = "CARGAR DATOS")
-        //carga datos iniciales de prueba en la BD
+        // carga datos iniciales de prueba en la BD
     }
     Button(
-        onClick = borrarClick
+        onClick = borrarClick,
     ) {
         Text(text = "BORRAR DATOS")
     }
-
-
 }
-
-
 
 @Composable
 fun ListaResultados(personas: List<PersonaEntity>) {
-Text("Lista de personas "+personas.size.toString())
+    Text("Lista de personas " + personas.size.toString())
 
-    //filtra por personas de casanova, resta implementar
+    // filtra por personas de casanova, resta implementar
     // el filtro mediante busqueda con el search bar
-var listaFiltrada = personas.filter { it.ciudad == "Isidro Casanova" }
+    var listaFiltrada = personas.filter { it.ciudad == "Isidro Casanova" }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(listaFiltrada){
-            it ->
+        items(listaFiltrada) { it ->
             Card(modifier = Modifier.fillMaxWidth()) {
                 Text(text = it.nombre)
                 Text(text = it.ciudad)
-
             }
         }
     }
-
 }
-
-
-
-
-
-

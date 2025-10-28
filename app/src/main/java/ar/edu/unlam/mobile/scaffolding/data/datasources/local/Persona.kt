@@ -4,18 +4,17 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ar.edu.unlam.mobile.scaffolding.data.repositories.CategoriaOficio
 
-
-@Entity(tableName="persona")
+@Entity(tableName = "persona")
 data class PersonaEntity(
-    @PrimaryKey(autoGenerate=true)
-    var id: Int?=null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
     val nombre: String,
     val dni: Long,
     val profesional: Boolean,
     val ubicacion: String?,
-    var ciudad: String
-    //var oficio : List<CategoriaOficio>?
-){
+    var ciudad: String,
+    // var oficio : List<CategoriaOficio>?
+) {
 /*
     fun checkOficio(oficio : String) : Boolean{
     var status : Boolean = false
