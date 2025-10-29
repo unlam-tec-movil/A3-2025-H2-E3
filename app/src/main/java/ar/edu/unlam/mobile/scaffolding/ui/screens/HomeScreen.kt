@@ -114,13 +114,23 @@ fun ListaResultados(
 ) {
     Text("Lista de personas " + personas.size.toString())
     // var parametro: String = ""
-    var listaFiltrada = personas.filter { it.ciudad.contains(parametroBusqueda.trim(), ignoreCase = true) }
+    var listaFiltrada =
+        personas.filter { persona ->
+
+            persona.oficios.any { oficio ->
+                oficio.contains(
+                    parametroBusqueda.trim(),
+                    ignoreCase = true,
+                )
+            }
+        }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(listaFiltrada) { it ->
             Card(modifier = Modifier.fillMaxWidth()) {
                 Text(text = it.nombre)
                 Text(text = it.ciudad)
+                Text(text = it.oficios.toString())
             }
         }
     }

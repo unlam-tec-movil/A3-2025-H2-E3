@@ -2,7 +2,16 @@ package ar.edu.unlam.mobile.scaffolding.data.datasources.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 import ar.edu.unlam.mobile.scaffolding.data.repositories.CategoriaOficio
+
+class OficiosConverter {
+    @TypeConverter
+    fun fromList(list: List<String>?): String? = list?.joinToString(separator = ",")
+
+    @TypeConverter
+    fun toList(data: String?): List<String>? = data?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
+}
 
 @Entity(tableName = "persona")
 data class PersonaEntity(
@@ -13,18 +22,5 @@ data class PersonaEntity(
     val profesional: Boolean,
     val ubicacion: String?,
     var ciudad: String,
-    // var oficio : List<CategoriaOficio>?
-) {
-/*
-    fun checkOficio(oficio : String) : Boolean{
-    var status : Boolean = false
-        if(this.oficio!=null && this.oficio.contains(oficio)){
-            status = true
-            return status
-        }else{
-            status =false
-            return status
-        }
-    }
-*/
-}
+    var oficios: List<String> = emptyList<String>(),
+)
