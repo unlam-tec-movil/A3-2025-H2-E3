@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ScaffoldingV2Theme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
@@ -57,21 +56,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    // Controller es el elemento que nos permite navegar entre pantallas. Tiene las acciones
-    // para navegar como naviegate y también la información de en dónde se "encuentra" el usuario
-    // a través del back stack
     val controller = rememberNavController()
     val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(
         bottomBar = { BottomBar(controller = controller) },
         floatingActionButton = {
-            IconButton(onClick = { controller.navigate("home") }) {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            }
         },
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
-                // custom snackbar with the custom action button color and border
+
                 val isError = (data.visuals as? SnackbarVisualsWithError)?.isError ?: false
                 val buttonColor =
                     if (isError) {
@@ -102,19 +95,15 @@ fun MainScreen() {
             }
         },
     ) { paddingValue ->
-        // NavHost es el componente que funciona como contenedor de los otros componentes que
-        // podrán ser destinos de navegación.
+
         NavHost(navController = controller, startDestination = "feed") {
-            // composable es el componente que se usa para definir un destino de navegación.
-            // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
-                // Home es el componente en sí que es el destino de navegación.
                 HomeScreen(modifier = Modifier.padding(paddingValue))
             }
             composable("feed") {
                 FeedScreen(
                     modifier = Modifier.padding(paddingValue),
-                    onServiceRequest = {}
+                    onServiceRequest = {},
                 )
             }
             composable("form") {

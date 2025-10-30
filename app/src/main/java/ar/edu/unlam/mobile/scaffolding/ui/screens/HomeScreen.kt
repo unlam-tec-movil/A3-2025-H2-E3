@@ -113,7 +113,7 @@ fun ListaResultados(
     parametroBusqueda: String,
 ) {
     Text("Lista de personas " + personas.size.toString())
-    // var parametro: String = ""
+
     var listaFiltrada =
         personas.filter { persona ->
 
