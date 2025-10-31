@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.AboutSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ActionButtons
@@ -27,12 +25,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileTab
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.TabSection
 
-@Preview
-@Composable
-fun ViewProfessionalProfileScreen() {
-    ProfessionalProfileScreen({}, {}, {}, {}, {})
-}
-
 @Composable
 fun ProfessionalProfileScreen(
     onBackClick: () -> Unit = {},
@@ -40,6 +32,8 @@ fun ProfessionalProfileScreen(
     onCall: () -> Unit = {},
     onWhatsApp: () -> Unit = {},
     onRegisterWork: () -> Unit = {},
+    dni: Int,
+    modifier: Modifier = Modifier,
 ) {
     // Estado para la pestaña seleccionada
     var selectedTab by remember { mutableStateOf(ProfileTab.ABOUT) }
@@ -72,52 +66,57 @@ fun ProfessionalProfileScreen(
             )
         }
 
-    Scaffold { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .background(Color.White),
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
+    ) {
+        LazyColumn(
+            modifier = Modifier.weight(1f),
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            // Header con información básica
-            ProfileHeader(
-                name = professionalData.name,
-                profession = professionalData.profession,
-                rating = professionalData.rating,
-            )
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+                // Header con información básica
+                ProfileHeader(
+                    name = professionalData.name,
+                    profession = professionalData.profession,
+                    rating = professionalData.rating,
+                )
 
-            // Botones de acción
-            ActionButtons(
-                onHowToGetThere = onHowToGetThere,
-                onCall = onCall,
-                onWhatsApp = onWhatsApp,
-                onRegisterWork = onRegisterWork,
-            )
+                // Botones de acción
+                ActionButtons(
+                    onHowToGetThere = onHowToGetThere,
+                    onCall = onCall,
+                    onWhatsApp = onWhatsApp,
+                    onRegisterWork = onRegisterWork,
+                )
 
-            Spacer(modifier = Modifier.height(15.dp))
-            Divider(color = Color.LightGray)
-            // Pestañas
-            TabSection(
-                selectedTab = selectedTab,
-                onTabSelected = { tab -> selectedTab = tab },
-            )
+                Spacer(modifier = Modifier.height(15.dp))
+                Divider(color = Color.LightGray)
+                // Pestañas
+                TabSection(
+                    selectedTab = selectedTab,
+                    onTabSelected = { tab -> selectedTab = tab },
+                )
+            }
 
             // Contenido de la pestaña seleccionada
             when (selectedTab) {
-                ProfileTab.ABOUT ->
-                    AboutSection(
-                        aboutText = professionalData.aboutText,
-                        keyInfo = professionalData.keyInfo,
-                        services = professionalData.services,
-                        modifier = Modifier.weight(1f),
-                    )
-
-                ProfileTab.GALLERY ->
-                    GallerySection(
-                        modifier = Modifier.weight(1f),
-                    )
+                ProfileTab.ABOUT -> {
+                    item {
+                        AboutSection(
+                            aboutText = professionalData.aboutText,
+                            keyInfo = professionalData.keyInfo,
+                            services = professionalData.services,
+                        )
+                    }
+                }
+                ProfileTab.GALLERY -> {
+                    items(1) {
+                        GallerySection()
+                    }
+                }
             }
         }
     }
