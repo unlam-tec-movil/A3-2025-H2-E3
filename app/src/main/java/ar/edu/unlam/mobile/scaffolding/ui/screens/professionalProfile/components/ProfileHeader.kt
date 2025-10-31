@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.R
 
-
 @Preview
 @Composable
 fun ViewProfileHeader() {
@@ -41,47 +40,51 @@ fun ProfileHeader(
     name: String,
     profession: String,
     rating: Double,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Row (
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(  16.dp),
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Box(
-            modifier = Modifier
-                .size(90.dp)
-                .background(Color.Gray, CircleShape)
-                .clip(CircleShape),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(90.dp)
+                    .background(Color.Gray, CircleShape)
+                    .clip(CircleShape),
+            contentAlignment = Alignment.Center,
         ) {
             Image(painter = painterResource(id = R.drawable.perfil), contentDescription = "perfil", contentScale = ContentScale.Crop)
         }
 
         Column(
-            modifier = modifier
-                .fillMaxWidth().padding(start = 25.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(start = 25.dp),
         ) {
             // Nombre y profesión
             Text(
                 text = name,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
             )
 
             Text(
                 text = profession,
                 fontSize = 16.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
 
             // Rating y reseñas
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Estrellas
                 Row {
@@ -89,14 +92,18 @@ fun ProfileHeader(
                         Icon(
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Estrella",
-                            tint = if (index < rating.toInt()) Color(0xFFFFC107) else Color(
-                                0xFFE0E0E0
-                            ),
-                            modifier = Modifier.size(20.dp)
+                            tint =
+                                if (index < rating.toInt()) {
+                                    Color(0xFFFFC107)
+                                } else {
+                                    Color(
+                                        0xFFE0E0E0,
+                                    )
+                                },
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                 }
-
             }
         }
     }

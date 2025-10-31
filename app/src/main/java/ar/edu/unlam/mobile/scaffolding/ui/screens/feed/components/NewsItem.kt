@@ -36,58 +36,58 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.R
 
-
 @Preview
 @Composable
 fun ViewNewItem() {
     NewsItem(
         "Juan Pérez",
         "Plomero",
-        "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices."
+        "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices.",
     )
 }
-
 
 @Composable
 fun NewsItem(
     name: String,
     profession: String,
     message: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         shape = RectangleShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Divider()
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
-
             // Header con nombre y profesión
-            Row (  modifier = Modifier.fillMaxWidth()){
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(0.8f)
+                    modifier = Modifier.weight(0.8f),
                 ) {
                     // Avatar
                     Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(Color.Blue, CircleShape)
-                            .clip(CircleShape),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .size(40.dp)
+                                .background(Color.Blue, CircleShape)
+                                .clip(CircleShape),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        //agarro la primera letra pero la idea es poner imagen despues
+                        // agarro la primera letra pero la idea es poner imagen despues
                         Text(
                             text = name.take(1),
                             color = Color.White,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
 
@@ -99,23 +99,23 @@ fun NewsItem(
                             text = name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                         Text(
                             text = profession,
                             fontSize = 14.sp,
-                            color = Color.Gray
+                            color = Color.Gray,
                         )
                     }
                 }
                 IconButton(
                     onClick = {},
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         contentDescription = "Dar like",
-                        tint = Color.Gray
+                        tint = Color.Gray,
                     )
                 }
             }
@@ -127,27 +127,30 @@ fun NewsItem(
                 text = message,
                 fontSize = 14.sp,
                 color = Color.Black,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Image(
-                painter = painterResource(
-                    id = if (name == "Juan Pérez") {
-                        R.drawable.plomeria
-                    } else if (name == "María Rodríguez") {
-                        R.drawable.tablero
-                    } else {
-                        R.drawable.gas
-                    }
-                ),
+                painter =
+                    painterResource(
+                        id =
+                            if (name == "Juan Pérez") {
+                                R.drawable.plomeria
+                            } else if (name == "María Rodríguez") {
+                                R.drawable.tablero
+                            } else {
+                                R.drawable.gas
+                            },
+                    ),
                 contentDescription = "imagen",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(5.dp)),
-                contentScale = ContentScale.Crop
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(5.dp)),
+                contentScale = ContentScale.Crop,
             )
             Spacer(modifier = Modifier.height(8.dp))
 
