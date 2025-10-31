@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.search.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,22 +43,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.data.datasources.local.PersonaEntity
-import ar.edu.unlam.mobile.scaffolding.ui.theme.TextBottomColorProfessional
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
+import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 
-@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun viewCardProfessionalSearch() {
-    val personaEjemplo =
-        PersonaEntity(
-            nombre = "Alejandro Gomez",
-            dni = 46872596,
-            profesional = true,
-            ubicacion = "0",
-            ciudad = "Ciudad Ejemplo",
-            oficios = listOf("plumber"),
-        )
+    ScaffoldingV2Theme(darkTheme = true) {
+        val personaEjemplo =
+            PersonaEntity(
+                nombre = "Alejandro Gomez",
+                dni = 46872596,
+                profesional = true,
+                ubicacion = "0",
+                ciudad = "Ciudad Ejemplo",
+                oficios = listOf("plumber"),
+            )
 
-    CardProfessionalSearch(personaEjemplo)
+        CardProfessionalSearch(personaEjemplo)
+    }
 }
 
 @Composable
@@ -69,9 +74,9 @@ fun CardProfessionalSearch(
             Modifier
                 .fillMaxWidth()
                 .clickable { onItemClick(P) },
-        shape = RoundedCornerShape(5.dp),
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier =
@@ -110,7 +115,7 @@ fun CardProfessionalSearch(
                     text = P.nombre,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Row(
@@ -119,14 +124,14 @@ fun CardProfessionalSearch(
                     Text(
                         text = getOficioDisplayName(P.oficios.first()),
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
                     )
 
                     Text(
                         text = " - ${P.ciudad}",
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -140,7 +145,7 @@ fun CardProfessionalSearch(
                 Icon(
                     imageVector = getOficioIcon(P.oficios.first()),
                     contentDescription = null,
-                    tint = TextBottomColorProfessional,
+                    tint = LightPrimary,
                     modifier =
                         Modifier
                             .size(32.dp)

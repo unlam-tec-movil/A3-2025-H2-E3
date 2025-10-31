@@ -2,8 +2,10 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,7 +38,7 @@ fun SuccessScreen(
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(5.dp)) {
+    Column(modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)) {
         SearchBar(
             query = query,
             onQueryChange = { query = it },
@@ -89,6 +91,9 @@ fun ListaResultados(
                 persona,
                 onItemClick = onProfessionalClick,
             )
+        }
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

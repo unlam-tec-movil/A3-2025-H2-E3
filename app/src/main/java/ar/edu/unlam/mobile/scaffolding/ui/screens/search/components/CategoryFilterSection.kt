@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,7 @@ fun CategoryFilterSection() {
         modifier =
             Modifier
                 .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(categories) { category ->
             CategoryChip(
@@ -53,7 +54,7 @@ fun CategoryChip(
         if (isSelected) {
             MaterialTheme.colorScheme.primary
         } else {
-            MaterialTheme.colorScheme.surfaceVariant
+            Color.Transparent
         }
 
     val contentColor =
@@ -64,8 +65,8 @@ fun CategoryChip(
         }
 
     AssistChip(
-        modifier = Modifier.clip(RoundedCornerShape(0.dp)),
-        shape = RoundedCornerShape(5.dp),
+        modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+        shape = RoundedCornerShape(8.dp),
         onClick = onSelected,
         label = {
             Text(

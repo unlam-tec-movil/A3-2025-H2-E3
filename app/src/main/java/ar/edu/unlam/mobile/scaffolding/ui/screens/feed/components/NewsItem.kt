@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,10 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,15 +35,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.R
+import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 
-@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ViewNewItem() {
-    NewsItem(
-        "Juan Pérez",
-        "Plomero",
-        "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices.",
-    )
+    ScaffoldingV2Theme(darkTheme = true) {
+        NewsItem(
+            "Juan Pérez",
+            "Plomero",
+            "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices.",
+        )
+    }
 }
 
 @Composable
@@ -57,15 +61,14 @@ fun NewsItem(
             modifier
                 .fillMaxWidth(),
         shape = RectangleShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Divider()
         Column(
             modifier =
                 Modifier
+                    .background(MaterialTheme.colorScheme.background)
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 8.dp),
+                    .padding(vertical = 12.dp, horizontal = 12.dp),
         ) {
             // Header con nombre y profesión
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -78,7 +81,7 @@ fun NewsItem(
                         modifier =
                             Modifier
                                 .size(40.dp)
-                                .background(Color.Blue, CircleShape)
+                                .background(Color.Gray, CircleShape)
                                 .clip(CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -98,12 +101,12 @@ fun NewsItem(
                             text = name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
                             text = profession,
                             fontSize = 14.sp,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.secondary,
                         )
                     }
                 }
@@ -125,7 +128,7 @@ fun NewsItem(
             Text(
                 text = message,
                 fontSize = 14.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.secondary,
                 lineHeight = 20.sp,
             )
 

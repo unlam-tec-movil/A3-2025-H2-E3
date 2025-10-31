@@ -12,16 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ar.edu.unlam.mobile.scaffolding.ui.theme.BottonColorProfessional
-import ar.edu.unlam.mobile.scaffolding.ui.theme.TextBottomColorProfessional
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 
 @Composable
 fun AboutSection(
@@ -34,7 +33,7 @@ fun AboutSection(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Sección Acerca de mí
@@ -43,13 +42,13 @@ fun AboutSection(
                 text = "Acerca de mí",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
             Text(
                 text = aboutText,
                 fontSize = 14.sp,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.secondary,
                 lineHeight = 20.sp,
             )
         }
@@ -61,14 +60,13 @@ fun AboutSection(
                 text = "Información Clave",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
             keyInfo.forEach { info ->
                 KeyValueRow(
                     key = info.key,
                     value = info.value,
-                    modifier = Modifier.padding(vertical = 4.dp),
                 )
             }
         }
@@ -80,7 +78,7 @@ fun AboutSection(
                 text = "Servicios Ofrecidos",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
             FlowRow(
@@ -109,13 +107,13 @@ private fun KeyValueRow(
             text = key,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.wrapContentWidth(),
         )
         Text(
             text = value,
             fontSize = 14.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -125,16 +123,16 @@ private fun ServiceChip(service: String) {
     Box(
         modifier =
             Modifier
-                .shadow(1.dp, RoundedCornerShape(16.dp), false, TextBottomColorProfessional)
+                .shadow(1.dp, RoundedCornerShape(16.dp), false, LightPrimary)
                 .background(
-                    color = BottonColorProfessional,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(16.dp),
                 ).padding(horizontal = 12.dp, vertical = 6.dp),
     ) {
         Text(
             text = service,
             fontSize = 12.sp,
-            color = TextBottomColorProfessional,
+            color = LightPrimary,
         )
     }
 }

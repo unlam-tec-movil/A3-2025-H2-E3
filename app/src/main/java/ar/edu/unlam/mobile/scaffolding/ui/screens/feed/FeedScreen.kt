@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,21 +12,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components.NewsItem
+import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun ViewFeedScreen() {
+    ScaffoldingV2Theme(darkTheme = false) {
+        FeedScreen({})
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun FeedScreen(
     onServiceRequest: () -> Unit = {},
@@ -70,7 +79,7 @@ fun FeedScreen(
                 Modifier
                     .fillMaxWidth()
                     .height(45.dp)
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
@@ -78,7 +87,7 @@ fun FeedScreen(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 text = "Novedades",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp,
             )
@@ -88,8 +97,7 @@ fun FeedScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(0.dp)
-                    .background(Color(0xFFF5F5F5)),
+                    .padding(0.dp),
         ) {
             items(newsItems) { item ->
                 NewsItem(

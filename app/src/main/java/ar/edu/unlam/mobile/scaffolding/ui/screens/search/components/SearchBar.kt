@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ar.edu.unlam.mobile.scaffolding.ui.theme.TextBottomColorProfessional
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 
 @Preview
 @Composable
@@ -77,7 +77,7 @@ fun SearchBar(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .heightIn(0.dp, 150.dp),
             shape = RoundedCornerShape(0.dp),
         ) {
@@ -112,7 +112,7 @@ fun ButtonQuery(
             shape = RoundedCornerShape(6.dp),
             colors =
                 ButtonDefaults.buttonColors(
-                    containerColor = TextBottomColorProfessional,
+                    containerColor = LightPrimary,
                     contentColor = Color.White,
                 ),
         ) {

@@ -1,6 +1,7 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -15,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ar.edu.unlam.mobile.scaffolding.ui.theme.CardColorProfessional
-import ar.edu.unlam.mobile.scaffolding.ui.theme.TextBottomColorProfessional
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightGrayOverlay
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 
 @Preview
 @Composable
@@ -35,12 +36,12 @@ fun TabSection(
     TabRow(
         selectedTabIndex = selectedTab.ordinal,
         modifier = modifier.fillMaxWidth(),
-        containerColor = CardColorProfessional,
+        containerColor = LightGrayOverlay,
         contentColor = Color.Gray,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
-                color = TextBottomColorProfessional,
+                color = LightPrimary,
                 height = 3.dp,
             )
         },
@@ -50,7 +51,7 @@ fun TabSection(
                 text = {
                     Text(
                         text = tab.title,
-                        color = if (selectedTab == tab) TextBottomColorProfessional else Color.Gray,
+                        color = if (selectedTab == tab) LightPrimary else Color.Gray,
                     )
                 },
                 selected = selectedTab == tab,
@@ -59,7 +60,7 @@ fun TabSection(
                     onTabSelected(tab)
                 },
                 selectedContentColor = Color.Blue, // Color cuando está seleccionado
-                unselectedContentColor = Color.Gray, // Color cuando NO está seleccionado
+                unselectedContentColor = MaterialTheme.colorScheme.secondary, // Color cuando NO está seleccionado
             )
         }
     }
