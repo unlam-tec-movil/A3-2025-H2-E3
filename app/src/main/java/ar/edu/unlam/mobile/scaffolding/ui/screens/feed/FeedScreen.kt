@@ -1,6 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,57 +29,67 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components.NewsItem
 @Composable
 fun FeedScreen(
     onServiceRequest: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // Novedades hardcodeadas
-    val newsItems = remember {
-        listOf(
-            NewsData(
-                id = 1,
-                name = "Juan Pérez",
-                profession = "Plomero",
-                message = "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices.",
-                isLiked = false
-            ),
-            NewsData(
-                id = 2,
-                name = "María Rodríguez",
-                profession = "Electricista",
-                message = "Consejo rápido: revisa los interruptores de tu tablero eléctrico antes de llamar. ¡Podrías ahorrarte el costo de la visita!",
-                isLiked = false
-            ),
-            NewsData(
-                id = 3,
-                name = "Carlos Gomez",
-                profession = "Gasista Matriculado",
-                message = "Revisión de seguridad de una instalación de gas en Caballito, ¡La seguridad es siempre lo primero! Contactame para revisiones anuales.",
-                isLiked = false
+    val newsItems =
+        remember {
+            listOf(
+                NewsData(
+                    id = 1,
+                    name = "Juan Pérez",
+                    profession = "Plomero",
+                    message =
+                        "Instalación de plomería completa terminada hoy en Palermo! " +
+                            "Trabajo limpio y clientes felices.",
+                    isLiked = false,
+                ),
+                NewsData(
+                    id = 2,
+                    name = "María Rodríguez",
+                    profession = "Electricista",
+                    message =
+                        "Consejo rápido: revisa los interruptores de tu tablero " +
+                            "eléctrico antes de llamar. ¡Podrías ahorrarte el costo de la visita!",
+                    isLiked = false,
+                ),
+                NewsData(
+                    id = 3,
+                    name = "Carlos Gomez",
+                    profession = "Gasista Matriculado",
+                    message =
+                        "Revisión de seguridad de una instalación de gas en Caballito, " +
+                            "¡La seguridad es siempre lo primero! Contactame para revisiones anuales.",
+                    isLiked = false,
+                ),
             )
-        )
-    }
+        }
     Column(modifier = modifier.fillMaxSize()) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(45.dp)
-            .background(Color.White),
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(45.dp)
+                    .background(Color.White),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-            ) {
+            horizontalArrangement = Arrangement.Center,
+        ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 text = "Novedades",
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
-                fontSize = 22.sp
+                fontSize = 22.sp,
             )
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp)
-                .background(Color(0xFFF5F5F5))
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(0.dp)
+                    .background(Color(0xFFF5F5F5)),
         ) {
             items(newsItems) { item ->
                 NewsItem(
@@ -93,11 +102,10 @@ fun FeedScreen(
     }
 }
 
-
 data class NewsData(
     val id: Int,
     val name: String,
     val profession: String,
     val message: String,
-    val isLiked: Boolean
+    val isLiked: Boolean,
 )

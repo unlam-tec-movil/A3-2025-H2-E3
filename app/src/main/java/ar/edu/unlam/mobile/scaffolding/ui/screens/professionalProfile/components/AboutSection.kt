@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -130,8 +129,7 @@ private fun ServiceChip(service: String) {
                 .background(
                     color = BottonColorProfessional,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .padding(horizontal = 12.dp, vertical = 6.dp)
+                ).padding(horizontal = 12.dp, vertical = 6.dp),
     ) {
         Text(
             text = service,

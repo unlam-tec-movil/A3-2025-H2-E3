@@ -114,7 +114,7 @@ fun MainScreen() {
             composable("feed") {
                 FeedScreen(
                     modifier = Modifier.padding(paddingValue),
-                    onServiceRequest = {}
+                    onServiceRequest = {},
                 )
             }
             composable("form") {

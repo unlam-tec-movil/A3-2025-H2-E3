@@ -21,7 +21,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.FORM_ROUTE
 @Composable
 fun BottomBar(controller: NavHostController) {
     val navBackStackEntry by controller.currentBackStackEntryAsState()
-    NavigationBar (modifier = Modifier.height(80.dp)){
+    NavigationBar(modifier = Modifier.height(80.dp)) {
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "home" } == true,
             onClick = { controller.navigate("home") },

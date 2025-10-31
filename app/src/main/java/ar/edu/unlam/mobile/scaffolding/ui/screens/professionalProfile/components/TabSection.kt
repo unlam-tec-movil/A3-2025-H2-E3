@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ar.edu.unlam.mobile.scaffolding.ui.theme.BottonColorProfessional
 import ar.edu.unlam.mobile.scaffolding.ui.theme.CardColorProfessional
 import ar.edu.unlam.mobile.scaffolding.ui.theme.TextBottomColorProfessional
 
@@ -42,16 +41,16 @@ fun TabSection(
             TabRowDefaults.Indicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
                 color = TextBottomColorProfessional,
-                height = 3.dp
+                height = 3.dp,
             )
-        }
+        },
     ) {
         ProfileTab.values().forEach { tab ->
             Tab(
                 text = {
                     Text(
                         text = tab.title,
-                        color = if (selectedTab == tab) TextBottomColorProfessional else Color.Gray
+                        color = if (selectedTab == tab) TextBottomColorProfessional else Color.Gray,
                     )
                 },
                 selected = selectedTab == tab,

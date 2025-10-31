@@ -88,7 +88,6 @@ fun ProfessionalProfileScreen(
                 rating = professionalData.rating,
             )
 
-
             // Botones de acción
             ActionButtons(
                 onHowToGetThere = onHowToGetThere,
