@@ -22,6 +22,7 @@ private val DarkColorScheme =
         background = DarkBackground,
         surface = DarkSurface,
         onSurface = DarkOnSurface,
+        primaryContainer = DeepOcean,
     )
 
 private val LightColorScheme =
@@ -31,6 +32,7 @@ private val LightColorScheme =
         background = LightBackground,
         surface = LightSurface,
         onSurface = LightOnSurface,
+        primaryContainer = SkyMist,
     )
 
 @Composable
