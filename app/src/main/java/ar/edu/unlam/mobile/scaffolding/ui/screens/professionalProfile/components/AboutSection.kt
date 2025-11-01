@@ -33,7 +33,7 @@ fun AboutSection(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Sección Acerca de mí
