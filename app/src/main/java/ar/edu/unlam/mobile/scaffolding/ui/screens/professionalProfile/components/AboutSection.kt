@@ -48,7 +48,7 @@ fun AboutSection(
             Text(
                 text = aboutText,
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp,
             )
         }
@@ -60,7 +60,7 @@ fun AboutSection(
                 text = "Información Clave",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
             keyInfo.forEach { info ->

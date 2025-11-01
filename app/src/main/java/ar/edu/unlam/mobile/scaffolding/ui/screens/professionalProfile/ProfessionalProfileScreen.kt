@@ -20,6 +20,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.KeyInfo
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileHeader
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileTab
+import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ReviewSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.TabSection
 
 @Composable
@@ -111,6 +112,11 @@ fun ProfessionalProfileScreen(
                 ProfileTab.GALLERY -> {
                     items(1) {
                         GallerySection()
+                    }
+                }
+                ProfileTab.REVIEW -> {
+                    items(1) {
+                        ReviewSection()
                     }
                 }
             }

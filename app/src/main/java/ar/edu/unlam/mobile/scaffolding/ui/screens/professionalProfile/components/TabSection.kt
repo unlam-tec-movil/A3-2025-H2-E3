@@ -62,5 +62,8 @@ enum class ProfileTab(
     val title: String,
 ) {
     ABOUT("Acerca de"),
+    REVIEW("Reseña"),
     GALLERY("Galería"),
+
+
 }
