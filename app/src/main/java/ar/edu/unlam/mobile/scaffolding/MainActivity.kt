@@ -32,6 +32,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -149,11 +150,7 @@ fun MainScreen() {
                     snackbarHostState = snackBarHostState,
                 )
                  * */
-                IntroductionScreen(
-                    { controller.navigate("feed") },
-                    { controller.navigate("feed") },
-                    modifier = Modifier.padding(paddingValue),
-                )
+                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
             }
             composable("introduction") {
                 IntroductionScreen(
