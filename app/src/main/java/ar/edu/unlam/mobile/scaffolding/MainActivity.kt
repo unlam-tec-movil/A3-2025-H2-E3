@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
@@ -59,8 +60,19 @@ fun MainScreen() {
     // a través del back stack
     val controller = rememberNavController()
     val snackBarHostState = remember { SnackbarHostState() }
+    val currentRoute =
+        controller
+            .currentBackStackEntryAsState()
+            .value
+            ?.destination
+            ?.route
+
     Scaffold(
-        bottomBar = { BottomBar(controller = controller) },
+        bottomBar = {
+            if (currentRoute != "introduction") {
+                BottomBar(controller = controller)
+            }
+        },
         /*
          * floatingActionButton = {
             IconButton(onClick = { controller.navigate("home") }) {
@@ -86,7 +98,9 @@ fun MainScreen() {
 
                 Snackbar(
                     modifier =
-                        Modifier.border(2.dp, MaterialTheme.colorScheme.secondary).padding(12.dp),
+                        Modifier
+                            .border(2.dp, MaterialTheme.colorScheme.secondary)
+                            .padding(12.dp),
                     action = {
                         TextButton(
                             onClick = { if (isError) data.dismiss() else data.performAction() },
@@ -103,7 +117,7 @@ fun MainScreen() {
     ) { paddingValue ->
         // NavHost es el componente que funciona como contenedor de los otros componentes que
         // podrán ser destinos de navegación.
-        NavHost(navController = controller, startDestination = "feed") {
+        NavHost(navController = controller, startDestination = "introduction") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
@@ -139,6 +153,13 @@ fun MainScreen() {
                     { controller.navigate("feed") },
                     { controller.navigate("feed") },
                     modifier = Modifier.padding(paddingValue),
+                )
+            }
+            composable("introduction") {
+                IntroductionScreen(
+                    { controller.navigate("feed") },
+                    { controller.navigate("feed") },
+                    modifier = Modifier.padding(bottom = 50.dp),
                 )
             }
             composable(

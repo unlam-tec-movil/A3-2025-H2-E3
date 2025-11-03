@@ -82,7 +82,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Dagger + Hilt (las que ya tienes)
+    // Dagger + Hilt
     implementation(libs.google.dagger.hilt.android)
     ksp(libs.androidx.room.compiler)
     ksp(libs.google.dagger.hilt.android.compiler)

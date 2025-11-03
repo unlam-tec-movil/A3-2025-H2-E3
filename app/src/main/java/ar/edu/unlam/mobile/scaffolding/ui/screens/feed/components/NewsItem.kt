@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,10 +30,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ar.edu.unlam.mobile.scaffolding.R
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 
 @Composable
 fun NewsItem(
@@ -41,6 +48,7 @@ fun NewsItem(
     isLiked: Boolean = false,
     imgUrl: String = "",
 ) {
+    val painter = rememberAsyncImagePainter(model = imgUrl)
     Card(
         modifier =
             modifier
@@ -119,16 +127,45 @@ fun NewsItem(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AsyncImage(
-                model = imgUrl,
-                contentDescription = "imagen",
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(5.dp)),
-                contentScale = ContentScale.Crop,
-            )
+            when (painter.state) {
+                is AsyncImagePainter.State.Loading -> {
+                    // Mostrar spinner mientras carga
+                    CircularProgressIndicator(
+                        modifier =
+                            Modifier
+                                .size(48.dp),
+                        strokeWidth = 3.dp,
+                        color = Color.White,
+                    )
+                }
+
+                is AsyncImagePainter.State.Error -> {
+                    // Mostrar icono de error si falla la carga
+                    Image(
+                        painter = painterResource(R.drawable.error),
+                        contentDescription = "imagen",
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(5.dp)),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+
+                else -> {
+                    AsyncImage(
+                        model = imgUrl,
+                        contentDescription = "imagen",
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(5.dp)),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp))
 
             ServiceButton({}, modifier = Modifier.padding(0.dp))
