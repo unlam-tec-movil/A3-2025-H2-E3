@@ -11,16 +11,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ar.edu.unlam.mobile.scaffolding.ui.theme.LightGrayOverlay
 import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
-
-@Preview
-@Composable
-fun ViewTabSection() {
-    TabSection(ProfileTab.GALLERY, {})
-}
 
 @Composable
 fun TabSection(
@@ -64,6 +57,4 @@ enum class ProfileTab(
     ABOUT("Acerca de"),
     REVIEW("Reseña"),
     GALLERY("Galería"),
-
-
 }

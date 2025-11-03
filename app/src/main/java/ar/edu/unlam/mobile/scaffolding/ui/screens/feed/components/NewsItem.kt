@@ -1,7 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,32 +27,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ar.edu.unlam.mobile.scaffolding.R
-import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
-
-@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun ViewNewItem() {
-    ScaffoldingV2Theme(darkTheme = true) {
-        NewsItem(
-            "Juan Pérez",
-            "Plomero",
-            "Instalación de plomería completa terminada hoy en Palermo! Trabajo limpio y clientes felices.",
-        )
-    }
-}
+import coil3.compose.AsyncImage
 
 @Composable
 fun NewsItem(
+    modifier: Modifier = Modifier,
     name: String,
     profession: String,
     message: String,
-    modifier: Modifier = Modifier,
+    isLiked: Boolean = false,
+    imgUrl: String = "",
 ) {
     Card(
         modifier =
@@ -62,7 +47,7 @@ fun NewsItem(
                 .fillMaxWidth(),
         shape = RectangleShape,
     ) {
-        Divider()
+        HorizontalDivider()
         Column(
             modifier =
                 Modifier
@@ -117,7 +102,7 @@ fun NewsItem(
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         contentDescription = "Dar like",
-                        tint = Color.Gray,
+                        tint = if (isLiked) MaterialTheme.colorScheme.primary else Color.Gray,
                     )
                 }
             }
@@ -134,18 +119,8 @@ fun NewsItem(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Image(
-                painter =
-                    painterResource(
-                        id =
-                            if (name == "Juan Pérez") {
-                                R.drawable.plomeria
-                            } else if (name == "María Rodríguez") {
-                                R.drawable.tablero
-                            } else {
-                                R.drawable.gas
-                            },
-                    ),
+            AsyncImage(
+                model = imgUrl,
                 contentDescription = "imagen",
                 modifier =
                     Modifier
