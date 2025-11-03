@@ -3,7 +3,6 @@ package ar.edu.unlam.mobile.scaffolding.data.datasources.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import ar.edu.unlam.mobile.scaffolding.data.repositories.CategoriaOficio
 
 class OficiosConverter {
     @TypeConverter
