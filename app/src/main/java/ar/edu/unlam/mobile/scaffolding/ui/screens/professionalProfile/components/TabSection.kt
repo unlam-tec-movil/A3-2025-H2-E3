@@ -35,7 +35,7 @@ fun TabSection(
     ) {
         ProfileTab.values().forEach { tab ->
             if (isMyProfile) {
-                if (tab !== ProfileTab.GALLERY){
+                if (tab !== ProfileTab.GALLERY) {
                     Tab(
                         text = {
                             Text(

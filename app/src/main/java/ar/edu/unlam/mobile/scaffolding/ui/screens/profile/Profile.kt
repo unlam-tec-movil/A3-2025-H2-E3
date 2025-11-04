@@ -34,10 +34,9 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 
 @Preview
 @Composable
-fun ViewProfileScreen(){
+fun ViewProfileScreen() {
     ProfileScreen(1)
 }
-
 
 @Composable
 fun ProfileScreen(
@@ -55,9 +54,9 @@ fun ProfileScreen(
                 rating = 4.8,
                 aboutText =
                     "Gasista matriculado con más de 15 años de experiencia en instalaciones, " +
-                            "reparaciones y mantenimiento de redes de gas en CABA y GBA. " +
-                            "Ofrezco un servicio profesional, seguro y garantizado, " +
-                            "cumpliendo con todas las normativas vigentes.",
+                        "reparaciones y mantenimiento de redes de gas en CABA y GBA. " +
+                        "Ofrezco un servicio profesional, seguro y garantizado, " +
+                        "cumpliendo con todas las normativas vigentes.",
                 keyInfo =
                     listOf(
                         KeyInfo("Matrícula N°:", "2-12345-01"),

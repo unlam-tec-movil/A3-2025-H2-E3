@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 import coil3.compose.AsyncImage
 
 @Preview
@@ -50,7 +49,7 @@ fun ProfileHeader(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ImageProfile(isMyProfile=isMyProfile)
+            ImageProfile(isMyProfile = isMyProfile)
             InfoProfile(name, profession, rating, isMyProfile)
         }
     } else {
