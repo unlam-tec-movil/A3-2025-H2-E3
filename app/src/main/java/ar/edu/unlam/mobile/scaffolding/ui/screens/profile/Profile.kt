@@ -49,7 +49,7 @@ fun ProfileScreen(
     val professionalData =
         remember {
             ProfessionalData(
-                name = "Carlos Rodríguez",
+                name = "Carlos Rodriguez",
                 profession = "Gasista Matriculado",
                 rating = 4.8,
                 aboutText =
