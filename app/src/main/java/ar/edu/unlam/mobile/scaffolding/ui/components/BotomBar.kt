@@ -1,6 +1,7 @@
 package ar.edu.unlam.mobile.scaffolding.ui.components
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
@@ -21,7 +22,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.FORM_ROUTE
 @Composable
 fun BottomBar(controller: NavHostController) {
     val navBackStackEntry by controller.currentBackStackEntryAsState()
-    NavigationBar(modifier = Modifier.height(80.dp)) {
+    NavigationBar(modifier = Modifier.height(70.dp).padding(0.dp)) {
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "home" } == true,
             onClick = { controller.navigate("home") },
@@ -30,6 +31,7 @@ fun BottomBar(controller: NavHostController) {
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home",
                     tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.height(45.dp).padding(10.dp),
                 )
             },
         )
@@ -41,6 +43,7 @@ fun BottomBar(controller: NavHostController) {
                     imageVector = Icons.Default.Person,
                     contentDescription = "User",
                     tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.height(45.dp).padding(10.dp),
                 )
             },
         )
@@ -52,6 +55,7 @@ fun BottomBar(controller: NavHostController) {
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "User",
                     tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.height(45.dp).padding(10.dp),
                 )
             },
         )

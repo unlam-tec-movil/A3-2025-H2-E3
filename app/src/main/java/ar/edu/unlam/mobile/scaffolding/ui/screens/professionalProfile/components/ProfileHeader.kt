@@ -29,7 +29,7 @@ import coil3.compose.AsyncImage
 @Preview
 @Composable
 fun ViewProfileHeader() {
-    ProfileHeader("Carlos Rodriguez", "Gasista Matriculado", 4.8)
+    ProfileHeader("Roberto García", "Gasista Matriculado", 4.8)
 }
 
 @Composable

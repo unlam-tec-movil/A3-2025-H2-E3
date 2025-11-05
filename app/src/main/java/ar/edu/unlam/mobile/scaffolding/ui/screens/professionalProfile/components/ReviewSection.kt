@@ -31,26 +31,26 @@ fun ReviewSection(modifier: Modifier = Modifier) {
                 date = "15 de Oct, 2023",
                 rating = 5,
                 comment =
-                    "Juan was fantastic!" +
-                        " He arrived on time, was very professional," +
-                        " and fixed my leaky faucet in no time. " +
-                        " Highly recommend his services to anyone in Buenos Aires.",
+                    "¡Roberto fue fantástico!" +
+                        " Llegó a tiempo, fue muy profesional," +
+                        " y arregló mi grifo que goteaba en un instante." +
+                        " Recomiendo mucho sus servicios a cualquiera en Buenos Aires.",
             ),
             Review(
                 clientName = "Carlos R.",
                 date = "12 de Oct, 2023",
                 rating = 4,
                 comment =
-                    "Good service, but he was a little late." +
-                        " The work was done well and the price was fair." +
-                        "  I would use him again.",
+                    "Buen servicio, aunque llegó un poco tarde." +
+                        " El trabajo quedó bien hecho y el precio fue justo." +
+                        " Lo contrataría nuevamente.",
             ),
             Review(
                 clientName = "Sofia L.",
                 date = "09 de Oct, 2023",
                 rating = 5,
                 comment =
-                    "¡Excelente servicio! Juan es muy amable y profesional." +
+                    "¡Excelente servicio! Roberto es muy amable y profesional." +
                         " Resolvió el problema de mi cañería rápidamente. " +
                         "¡Lo llamaré de nuevo si lo necesito!",
             ),

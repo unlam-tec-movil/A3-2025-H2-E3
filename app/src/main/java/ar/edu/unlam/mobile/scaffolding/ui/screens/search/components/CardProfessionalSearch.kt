@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Nature
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -69,6 +70,7 @@ fun CardProfessionalSearch(
     P: PersonaEntity,
     onItemClick: (PersonaEntity) -> Unit = {},
 ) {
+    HorizontalDivider()
     Card(
         modifier =
             Modifier
@@ -76,13 +78,13 @@ fun CardProfessionalSearch(
                 .clickable { onItemClick(P) },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(0.dp, 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Avatar con la primera letra del nombre

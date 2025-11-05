@@ -105,6 +105,7 @@ fun FeedScreen(
                             message = news.message,
                             isLiked = news.isLiked,
                             imgUrl = news.imgUrl.toString(),
+                            userImgUrl = news.userImgUrl.toString(),
                         )
                     }
                 }

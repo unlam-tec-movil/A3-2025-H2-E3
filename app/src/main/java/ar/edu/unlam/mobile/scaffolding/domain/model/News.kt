@@ -6,6 +6,7 @@ data class News(
     val isLiked: Boolean,
     val likes: Int,
     val imgUrl: String?,
+    val userImgUrl: String?,
     val name: String,
     val userId: String,
     val profession: String,

@@ -35,6 +35,7 @@ class NewsRepositoryImpl
                         profession = news.profession,
                         userId = news.userId,
                         imgUrl = news.imgUrl,
+                        userImgUrl = news.userImgUrl,
                         isLiked = news.isLiked,
                         likes = news.likes,
                     )
@@ -50,7 +51,6 @@ class NewsRepositoryImpl
             }
     }
 
-// Extension function para convertir DTO a Domain
 private fun NewsDto.toDomain(): News =
     News(
         id = this.id,
@@ -58,6 +58,7 @@ private fun NewsDto.toDomain(): News =
         isLiked = this.isLiked,
         likes = this.likes,
         imgUrl = this.imgUrl,
+        userImgUrl = this.userImgUrl,
         name = this.name,
         userId = this.userId,
         profession = this.profession,
