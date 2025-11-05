@@ -8,6 +8,7 @@ data class NewsDto(
     @SerializedName("isLiked") val isLiked: Boolean,
     @SerializedName("likes") val likes: Int,
     @SerializedName("imgUrl") val imgUrl: String?,
+    @SerializedName("userImgUrl") val userImgUrl: String?,
     @SerializedName("name") val name: String,
     @SerializedName("userId") val userId: String,
     @SerializedName("profession") val profession: String,

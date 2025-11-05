@@ -7,24 +7,3 @@ data class NewsUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
 )
-
-fun News.toUiModel(): NewsItemUiModel =
-    NewsItemUiModel(
-        id = id,
-        name = name,
-        profession = profession,
-        message = message,
-        isLiked = isLiked,
-        likes = likes,
-        imgUrl = imgUrl,
-    )
-
-data class NewsItemUiModel(
-    val id: String,
-    val name: String,
-    val profession: String,
-    val message: String,
-    val isLiked: Boolean,
-    val likes: Int,
-    val imgUrl: String?,
-)

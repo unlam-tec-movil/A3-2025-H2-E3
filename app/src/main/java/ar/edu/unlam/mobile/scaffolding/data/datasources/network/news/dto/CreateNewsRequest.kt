@@ -8,6 +8,7 @@ data class CreateNewsRequest(
     @SerializedName("profession") val profession: String,
     @SerializedName("userId") val userId: String,
     @SerializedName("imgUrl") val imgUrl: String? = null,
+    @SerializedName("userImgUrl") val userImgUrl: String? = null,
     @SerializedName("isLiked") val isLiked: Boolean = false,
     @SerializedName("likes") val likes: Int = 0,
 )

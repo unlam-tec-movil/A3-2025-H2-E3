@@ -103,10 +103,12 @@ fun IntroductionScreen(
         ) {
             if (currentPage < pages.size - 1) {
                 TextButton(onClick = {
-                    currentPage = pages.size - 1
+                    onLoginClick()
                 }) {
-                    Text("Skip", color = MaterialTheme.colorScheme.primary)
+                    Text("Skip", color = MaterialTheme.colorScheme.primary, modifier = Modifier.height(20.dp))
                 }
+            } else {
+                Spacer(modifier = Modifier.height(50.dp))
             }
         }
 

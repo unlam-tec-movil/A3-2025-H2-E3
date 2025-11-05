@@ -7,8 +7,6 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -19,6 +17,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 fun TabSection(
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit,
+    isMyProfile: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     TabRow(
@@ -35,18 +34,35 @@ fun TabSection(
         },
     ) {
         ProfileTab.values().forEach { tab ->
-            Tab(
-                text = {
-                    Text(
-                        text = tab.title,
-                        color = if (selectedTab == tab) LightPrimary else Color.Gray,
+            if (isMyProfile) {
+                if (tab !== ProfileTab.GALLERY) {
+                    Tab(
+                        text = {
+                            Text(
+                                text = tab.title,
+                                color = if (selectedTab == tab) LightPrimary else Color.Gray,
+                            )
+                        },
+                        selected = selectedTab == tab,
+                        onClick = {
+                            onTabSelected(tab)
+                        },
                     )
-                },
-                selected = selectedTab == tab,
-                onClick = {
-                    onTabSelected(tab)
-                },
-            )
+                }
+            } else {
+                Tab(
+                    text = {
+                        Text(
+                            text = tab.title,
+                            color = if (selectedTab == tab) LightPrimary else Color.Gray,
+                        )
+                    },
+                    selected = selectedTab == tab,
+                    onClick = {
+                        onTabSelected(tab)
+                    },
+                )
+            }
         }
     }
 }

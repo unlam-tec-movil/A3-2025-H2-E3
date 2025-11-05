@@ -18,6 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -32,6 +33,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +53,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ViewMainScreen() {
+    MainScreen()
 }
 
 @Composable
@@ -149,11 +157,7 @@ fun MainScreen() {
                     snackbarHostState = snackBarHostState,
                 )
                  * */
-                IntroductionScreen(
-                    { controller.navigate("feed") },
-                    { controller.navigate("feed") },
-                    modifier = Modifier.padding(paddingValue),
-                )
+                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
             }
             composable("introduction") {
                 IntroductionScreen(
