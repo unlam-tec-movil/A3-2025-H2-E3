@@ -6,36 +6,34 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
-import ar.edu.unlam.mobile.scaffolding.ui.screens.FormScreen
-import ar.edu.unlam.mobile.scaffolding.ui.screens.HOME_SCREEN_ROUTE
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -57,6 +55,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview
+@Composable
+fun ViewMainScreen() {
+    MainScreen()
+}
+
 @Composable
 fun MainScreen() {
     // Controller es el elemento que nos permite navegar entre pantallas. Tiene las acciones
@@ -64,13 +68,26 @@ fun MainScreen() {
     // a través del back stack
     val controller = rememberNavController()
     val snackBarHostState = remember { SnackbarHostState() }
+    val currentRoute =
+        controller
+            .currentBackStackEntryAsState()
+            .value
+            ?.destination
+            ?.route
+
     Scaffold(
-        bottomBar = { BottomBar(controller = controller) },
-        floatingActionButton = {
+        bottomBar = {
+            if (currentRoute != "introduction") {
+                BottomBar(controller = controller)
+            }
+        },
+        /*
+         * floatingActionButton = {
             IconButton(onClick = { controller.navigate("home") }) {
                 Icon(Icons.Filled.Home, contentDescription = "Home")
             }
         },
+         * */
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
                 // custom snackbar with the custom action button color and border
@@ -89,7 +106,9 @@ fun MainScreen() {
 
                 Snackbar(
                     modifier =
-                        Modifier.border(2.dp, MaterialTheme.colorScheme.secondary).padding(12.dp),
+                        Modifier
+                            .border(2.dp, MaterialTheme.colorScheme.secondary)
+                            .padding(12.dp),
                     action = {
                         TextButton(
                             onClick = { if (isError) data.dismiss() else data.performAction() },
@@ -106,17 +125,45 @@ fun MainScreen() {
     ) { paddingValue ->
         // NavHost es el componente que funciona como contenedor de los otros componentes que
         // podrán ser destinos de navegación.
-        NavHost(navController = controller, startDestination = HOME_SCREEN_ROUTE) {
+        NavHost(navController = controller, startDestination = "introduction") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
-                // Home es el componente en sí que es el destino de navegación.
-                HomeScreen(modifier = Modifier.padding(paddingValue))
+                HomeScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    navController = controller,
+                )
+            }
+            composable(
+                route = "professional/{dni}",
+                arguments = listOf(navArgument("dni") { type = NavType.IntType }),
+            ) { navBackStackEntry ->
+                val dni = navBackStackEntry.arguments?.getInt("dni") ?: 0
+                ProfessionalProfileScreen(
+                    dni = dni,
+                    modifier = Modifier.padding(paddingValue),
+                )
+            }
+            composable("feed") {
+                FeedScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    onServiceRequest = {},
+                )
             }
             composable("form") {
-                FormScreen(
+                /*
+                 * FormScreen(
                     modifier = Modifier.padding(paddingValue),
                     snackbarHostState = snackBarHostState,
+                )
+                 * */
+                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
+            }
+            composable("introduction") {
+                IntroductionScreen(
+                    { controller.navigate("feed") },
+                    { controller.navigate("feed") },
+                    modifier = Modifier.padding(bottom = 50.dp),
                 )
             }
             composable(
