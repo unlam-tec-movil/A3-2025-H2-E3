@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ fun AboutSection(
     keyInfo: List<KeyInfo>,
     services: List<String>,
     modifier: Modifier = Modifier,
+    isMyProfile: Boolean = false,
 ) {
     Column(
         modifier =
@@ -53,7 +53,8 @@ fun AboutSection(
             )
         }
 
-        Spacer(modifier = Modifier.height(5.dp))
+        HorizontalDivider()
+
         // Sección Información Clave
         Column {
             Text(
@@ -61,7 +62,7 @@ fun AboutSection(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = 10.dp),
             )
             keyInfo.forEach { info ->
                 KeyValueRow(
@@ -70,8 +71,7 @@ fun AboutSection(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(5.dp))
+        HorizontalDivider()
         // Sección Servicios Ofrecidos
         Column {
             Text(
@@ -90,6 +90,7 @@ fun AboutSection(
                 }
             }
         }
+        if (isMyProfile) HorizontalDivider()
     }
 }
 

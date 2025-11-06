@@ -1,6 +1,7 @@
 package ar.edu.unlam.mobile.scaffolding.di
 
 import ar.edu.unlam.mobile.scaffolding.data.datasources.network.news.NewsApi
+import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.ProfessionalsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,4 +44,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideNewsApi(retrofit: Retrofit): NewsApi = retrofit.create(NewsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideProfessionalsApi(retrofit: Retrofit): ProfessionalsApi = retrofit.create(ProfessionalsApi::class.java)
 }

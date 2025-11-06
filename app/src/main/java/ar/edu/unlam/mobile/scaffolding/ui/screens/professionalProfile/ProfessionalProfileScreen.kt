@@ -48,7 +48,7 @@ fun ProfessionalProfileScreen(
     val professionalData =
         remember {
             ProfessionalData(
-                name = "Carlos Rodríguez",
+                name = "Roberto García",
                 profession = "Gasista Matriculado",
                 rating = 4.8,
                 aboutText =
@@ -108,6 +108,8 @@ fun ProfessionalProfileScreen(
                     name = professionalData.name,
                     profession = professionalData.profession,
                     rating = professionalData.rating,
+                    isMyProfile = false,
+                    imgUrl = "",
                 )
 
                 // Botones de acción
