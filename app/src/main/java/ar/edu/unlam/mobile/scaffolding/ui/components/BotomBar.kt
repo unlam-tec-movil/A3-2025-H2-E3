@@ -6,6 +6,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Margin
+import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -28,7 +34,7 @@ fun BottomBar(controller: NavHostController) {
             onClick = { controller.navigate("home") },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Home,
+                    imageVector = Icons.Outlined.Search,
                     contentDescription = "Home",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(10.dp),
@@ -40,8 +46,21 @@ fun BottomBar(controller: NavHostController) {
             onClick = { controller.navigate("feed") },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "User",
+                    imageVector = Icons.Outlined.Margin,
+                    contentDescription = "feed",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.height(45.dp).padding(10.dp),
+                )
+            },
+        )
+
+        NavigationBarItem(
+            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "map" } == true,
+            onClick = { controller.navigate("map") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Map,
+                    contentDescription = "map",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(10.dp),
                 )
@@ -52,7 +71,7 @@ fun BottomBar(controller: NavHostController) {
             onClick = { controller.navigate(FORM_ROUTE) },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.CheckCircle,
+                    imageVector = Icons.Outlined.Person,
                     contentDescription = "User",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(10.dp),

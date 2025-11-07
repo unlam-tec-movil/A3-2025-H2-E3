@@ -26,21 +26,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.unlam.mobile.scaffolding.domain.classes.ShakeDetectorComposable
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
+import ar.edu.unlam.mobile.scaffolding.ui.components.MapboxScreen
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.map.MapScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
+import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
+
+const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFja3U5NSIsImEiOiJjbWhucDNsNW0wMnp1Mmtwemg1dGNyb2Z1In0.dGrMielTiHaXoWTd38nYUQ"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapboxOptions.accessToken = MAPBOX_ACCESS_TOKEN
         setContent {
             ScaffoldingV2Theme {
                 // A surface container using the 'background' color from the theme
@@ -63,9 +70,6 @@ fun ViewMainScreen() {
 
 @Composable
 fun MainScreen() {
-    // Controller es el elemento que nos permite navegar entre pantallas. Tiene las acciones
-    // para navegar como naviegate y también la información de en dónde se "encuentra" el usuario
-    // a través del back stack
     val controller = rememberNavController()
     val snackBarHostState = remember { SnackbarHostState() }
     val currentRoute =
@@ -75,22 +79,26 @@ fun MainScreen() {
             ?.destination
             ?.route
 
+    // componente que escucha el sensor de movimiento para detectar un shake y disparar una accion
+    @Suppress("ktlint:standard:property-naming")
+    val MAPA_ROUTE: String = "map"
+    ShakeDetectorComposable(
+        onShake = {
+            controller.navigate(MAPA_ROUTE) {
+                launchSingleTop = true
+            }
+        },
+    )
+
     Scaffold(
         bottomBar = {
             if (currentRoute != "introduction") {
                 BottomBar(controller = controller)
             }
         },
-        /*
-         * floatingActionButton = {
-            IconButton(onClick = { controller.navigate("home") }) {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            }
-        },
-         * */
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
-                // custom snackbar with the custom action button color and border
+
                 val isError = (data.visuals as? SnackbarVisualsWithError)?.isError ?: false
                 val buttonColor =
                     if (isError) {
@@ -123,11 +131,8 @@ fun MainScreen() {
             }
         },
     ) { paddingValue ->
-        // NavHost es el componente que funciona como contenedor de los otros componentes que
-        // podrán ser destinos de navegación.
+
         NavHost(navController = controller, startDestination = "introduction") {
-            // composable es el componente que se usa para definir un destino de navegación.
-            // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
                 HomeScreen(
                     modifier = Modifier.padding(paddingValue),
@@ -172,6 +177,11 @@ fun MainScreen() {
             ) { navBackStackEntry ->
                 val id = navBackStackEntry.arguments?.getString("id") ?: "1"
                 UserScreen(userId = id, modifier = Modifier.padding(paddingValue))
+            }
+
+            // ruta definida para probar icono map de bottombar
+            composable(route = "map") {
+                MapboxScreen()
             }
         }
     }

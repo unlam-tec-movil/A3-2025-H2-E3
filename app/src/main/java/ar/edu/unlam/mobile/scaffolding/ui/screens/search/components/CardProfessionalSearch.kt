@@ -120,18 +120,18 @@ fun CardProfessionalSearch(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
 
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
-                        text = getOficioDisplayName(P.oficios.first()),
+                        text = P.oficios.toString(),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
                     )
 
                     Text(
-                        text = " - ${P.ciudad}",
+                        text = P.ciudad,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
