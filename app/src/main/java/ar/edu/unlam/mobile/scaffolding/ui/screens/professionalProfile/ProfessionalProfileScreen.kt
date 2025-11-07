@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.AboutSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ActionButtons
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.GallerySection
@@ -39,39 +44,13 @@ fun ProfessionalProfileScreen(
     onCall: () -> Unit = {},
     onWhatsApp: () -> Unit = {},
     onRegisterWork: () -> Unit = {},
-    dni: Int,
     modifier: Modifier = Modifier,
+    viewModel: ProfessionalProfileViewModel = hiltViewModel(),
 ) {
     // Estado para la pestaña seleccionada
     var selectedTab by remember { mutableStateOf(ProfileTab.ABOUT) }
 
-    val professionalData =
-        remember {
-            ProfessionalData(
-                name = "Roberto García",
-                profession = "Gasista Matriculado",
-                rating = 4.8,
-                aboutText =
-                    "Gasista matriculado con más de 15 años de experiencia en instalaciones, " +
-                        "reparaciones y mantenimiento de redes de gas en CABA y GBA. " +
-                        "Ofrezco un servicio profesional, seguro y garantizado, " +
-                        "cumpliendo con todas las normativas vigentes.",
-                keyInfo =
-                    listOf(
-                        KeyInfo("Matrícula N°:", "2-12345-01"),
-                        KeyInfo("Zona de Cobertura:", "CABA y GBA Norte"),
-                        KeyInfo("Años de Experiencia:", "15+ años"),
-                    ),
-                services =
-                    listOf(
-                        "Instalaciones",
-                        "Reparaciones",
-                        "Detección de Fugas",
-                        "Planos de Gas",
-                        "Habilitaciones",
-                    ),
-            )
-        }
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier =
@@ -98,67 +77,103 @@ fun ProfessionalProfileScreen(
             )
         }
         Divider()
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                // Header con información básica
-                ProfileHeader(
-                    name = professionalData.name,
-                    profession = professionalData.profession,
-                    rating = professionalData.rating,
-                    isMyProfile = false,
-                    imgUrl = "",
-                )
-
-                // Botones de acción
-                ActionButtons(
-                    onHowToGetThere = onHowToGetThere,
-                    onCall = onCall,
-                    onWhatsApp = onWhatsApp,
-                    onRegisterWork = onRegisterWork,
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-                // Pestañas
-                TabSection(
-                    selectedTab = selectedTab,
-                    onTabSelected = { tab -> selectedTab = tab },
-                )
+        when {
+            uiState.isLoading -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    CircularProgressIndicator()
+                    Text(
+                        text = "Cargando Perfil...",
+                        modifier = Modifier.padding(top = 16.dp),
+                    )
+                }
             }
 
-            // Contenido de la pestaña seleccionada
-            when (selectedTab) {
-                ProfileTab.ABOUT -> {
+            uiState.error != null -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "Error: ${uiState.error}",
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                    )
+                    Button(
+                        onClick = { viewModel.refreshProfessional() },
+                        modifier = Modifier.padding(top = 16.dp),
+                    ) {
+                        Text("Reintentar")
+                    }
+                }
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
                     item {
-                        AboutSection(
-                            aboutText = professionalData.aboutText,
-                            keyInfo = professionalData.keyInfo,
-                            services = professionalData.services,
+                        Spacer(modifier = Modifier.height(10.dp))
+                        // Header con información básica
+                        ProfileHeader(
+                            modifier = Modifier,
+                            name = uiState.professionals?.name ?: "",
+                            profession = uiState.professionals?.profession ?: "",
+                            rating = uiState.professionals?.rating ?: 1.0,
+                            isMyProfile = false,
+                            imgUrl = uiState.professionals?.imgUrl ?: "",
+                        )
+
+                        // Botones de acción
+                        ActionButtons(
+                            onHowToGetThere = onHowToGetThere,
+                            onCall = onCall,
+                            onWhatsApp = onWhatsApp,
+                            onRegisterWork = onRegisterWork,
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+                        // Pestañas
+                        TabSection(
+                            selectedTab = selectedTab,
+                            onTabSelected = { tab -> selectedTab = tab },
                         )
                     }
-                }
-                ProfileTab.GALLERY -> {
-                    items(1) {
-                        GallerySection()
-                    }
-                }
-                ProfileTab.REVIEW -> {
-                    items(1) {
-                        ReviewSection()
+
+                    // Contenido de la pestaña seleccionada
+                    when (selectedTab) {
+                        ProfileTab.ABOUT -> {
+                            item {
+                                AboutSection(
+                                    aboutText = uiState.professionals?.aboutText ?: "",
+                                    keyInfo =
+                                        uiState.professionals?.keyInfo?.map { (key, value) ->
+                                            KeyInfo(key, value)
+                                        } ?: emptyList(),
+                                    services = uiState.professionals?.services ?: emptyList(),
+                                    isMyProfile = true,
+                                )
+                            }
+                        }
+
+                        ProfileTab.GALLERY -> {
+                            items(1) {
+                                GallerySection()
+                            }
+                        }
+
+                        ProfileTab.REVIEW -> {
+                            items(1) {
+                                ReviewSection()
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
-
-data class ProfessionalData(
-    val name: String,
-    val profession: String,
-    val rating: Double,
-    val aboutText: String,
-    val keyInfo: List<KeyInfo>,
-    val services: List<String>,
-)

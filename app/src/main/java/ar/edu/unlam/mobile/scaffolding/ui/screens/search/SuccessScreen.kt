@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,8 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ar.edu.unlam.mobile.scaffolding.data.datasources.local.PersonaEntity
+import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CardProfessionalSearch
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CategoryFilterSection
@@ -39,8 +42,9 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
 fun SuccessScreen(
     vm: HomeViewModel,
     navController: NavController,
-) { // Agregar NavController
-    val personas by vm.personas.collectAsState()
+    viewModel: SuccessViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
@@ -63,59 +67,92 @@ fun SuccessScreen(
                 fontSize = 22.sp,
             )
         }
-        Divider()
+        HorizontalDivider()
+
         Column(modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)) {
             SearchBar(
                 query = query,
                 onQueryChange = { query = it },
                 active = active,
                 onActiveChange = { active = it },
-                onBotonClick = { vm.insertarAll() },
-                borrarClick = { vm.deleteAll() },
             )
             CategoryFilterSection()
-            ListaResultados(
-                personas,
-                query,
-                onProfessionalClick = { profesional ->
-                    // Navegar a la pantalla de perfil del profesional
-                    navController.navigate("professional/${profesional.dni}")
-                },
-            )
+
+            when {
+                uiState.isLoading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        CircularProgressIndicator()
+                        Text(
+                            text = "Cargando profesionales...",
+                            modifier = Modifier.padding(top = 16.dp),
+                        )
+                    }
+                }
+
+                uiState.error != null -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = "Error: ${uiState.error}",
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center,
+                        )
+                        Button(
+                            onClick = { viewModel.refreshProfessional() },
+                            modifier = Modifier.padding(top = 16.dp),
+                        ) {
+                            Text("Reintentar")
+                        }
+                    }
+                }
+
+                else -> {
+                    ListaResultados(
+                        profesionales = uiState.professionals,
+                        parametroBusqueda = query,
+                        onProfessionalClick = { profesional ->
+                            navController.navigate("professional/${profesional.id}")
+                        },
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 fun ListaResultados(
-    personas: List<PersonaEntity>,
+    profesionales: List<Professionals>,
     parametroBusqueda: String,
-    onProfessionalClick: (PersonaEntity) -> Unit, // Agregar este parámetro
+    onProfessionalClick: (Professionals) -> Unit,
 ) {
-    Text(
-        "Lista de personas " + personas.size.toString(),
-        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Bold,
-    )
+    val listaFiltrada =
+        if (parametroBusqueda.trim().isEmpty()) {
+            profesionales
+        } else {
+            profesionales.filter { profesional ->
 
-    var listaFiltrada =
-        personas.filter { persona ->
-            persona.oficios.any { oficio ->
-                oficio.contains(
-                    parametroBusqueda.trim(),
-                    ignoreCase = true,
-                )
+                profesional.profession.contains(parametroBusqueda.trim(), ignoreCase = true) ||
+                    profesional.name.contains(parametroBusqueda.trim(), ignoreCase = true) ||
+                    profesional.services.any { service ->
+                        service.contains(parametroBusqueda.trim(), ignoreCase = true)
+                    }
             }
         }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        items(listaFiltrada) { persona ->
+        items(listaFiltrada) { profesional ->
             CardProfessionalSearch(
-                persona,
+                P = profesional,
                 onItemClick = onProfessionalClick,
             )
         }
