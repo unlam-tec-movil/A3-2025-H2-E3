@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,7 +56,13 @@ fun GallerySection(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(16.dp, 0.dp, 16.dp, 16.dp),
+                .then(
+                    if (isMyProfile) {
+                        Modifier.padding(16.dp, 0.dp, 16.dp, 16.dp)
+                    } else {
+                        Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp)
+                    },
+                ),
     ) {
         if (isMyProfile) {
             // Scroll horizontal para mi perfil con botón agregar primero
@@ -93,6 +98,7 @@ fun GallerySection(
                             Modifier
                                 .width(150.dp)
                                 .aspectRatio(0.9f),
+                        isMyProfile,
                     )
                 }
             }
@@ -102,16 +108,16 @@ fun GallerySection(
 
             chunkedItems.forEachIndexed { index, rowItems ->
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     rowItems.forEach { item ->
                         GalleryItemCard(
                             item = item,
                             modifier =
                                 Modifier
-                                    .weight(1f)
-                                    .aspectRatio(0.9f),
+                                    .weight(1f),
+                            isMyProfile,
                         )
                     }
 
@@ -121,7 +127,7 @@ fun GallerySection(
                 }
                 // Espacio entre filas
                 if (index < chunkedItems.size - 1) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
                 }
             }
         }
@@ -187,13 +193,14 @@ fun AddGalleryItemCard(
 fun GalleryItemCard(
     item: GalleryItem,
     modifier: Modifier = Modifier,
+    isMyProfile: Boolean,
 ) {
     Card(
         modifier =
             modifier
                 .aspectRatio(0.9f),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(if (isMyProfile) 8.dp else 0.dp),
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,

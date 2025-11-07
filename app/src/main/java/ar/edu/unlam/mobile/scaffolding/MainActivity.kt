@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -135,13 +136,14 @@ fun MainScreen() {
                 )
             }
             composable(
-                route = "professional/{dni}",
-                arguments = listOf(navArgument("dni") { type = NavType.IntType }),
-            ) { navBackStackEntry ->
-                val dni = navBackStackEntry.arguments?.getInt("dni") ?: 0
+                route = "professional/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
                 ProfessionalProfileScreen(
-                    dni = dni,
                     modifier = Modifier.padding(paddingValue),
+                    viewModel = hiltViewModel(backStackEntry),
                 )
             }
             composable("feed") {

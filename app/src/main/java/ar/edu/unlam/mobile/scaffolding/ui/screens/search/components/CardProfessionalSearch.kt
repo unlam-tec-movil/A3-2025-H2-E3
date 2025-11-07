@@ -1,6 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.search.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,46 +28,34 @@ import androidx.compose.material.icons.filled.Nature
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ar.edu.unlam.mobile.scaffolding.data.datasources.local.PersonaEntity
+import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
-import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
-
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun viewCardProfessionalSearch() {
-    ScaffoldingV2Theme(darkTheme = true) {
-        val personaEjemplo =
-            PersonaEntity(
-                nombre = "Alejandro Gomez",
-                dni = 46872596,
-                profesional = true,
-                ubicacion = "0",
-                ciudad = "Ciudad Ejemplo",
-                oficios = listOf("plumber"),
-            )
-
-        CardProfessionalSearch(personaEjemplo)
-    }
-}
+import coil3.compose.AsyncImage
 
 @Composable
 fun CardProfessionalSearch(
-    P: PersonaEntity,
-    onItemClick: (PersonaEntity) -> Unit = {},
+    P: Professionals,
+    onItemClick: (Professionals) -> Unit = {},
 ) {
     HorizontalDivider()
     Card(
@@ -88,24 +75,7 @@ fun CardProfessionalSearch(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Avatar con la primera letra del nombre
-            Box(
-                modifier =
-                    Modifier
-                        .size(50.dp)
-                        .background(Color.Gray, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text =
-                        P.nombre
-                            .first()
-                            .toString()
-                            .uppercase(),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                )
-            }
+            ImgCardProfessional(P.imgUrl)
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -114,9 +84,9 @@ fun CardProfessionalSearch(
                 modifier = Modifier.weight(1f),
             ) {
                 Text(
-                    text = P.nombre,
+                    text = P.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
 
@@ -124,28 +94,28 @@ fun CardProfessionalSearch(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
-                        text = getOficioDisplayName(P.oficios.first()),
+                        text = getOficioDisplayName(P.profession),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
                     )
 
+                    // Rating
                     Text(
-                        text = " - ${P.ciudad}",
-                        fontSize = 14.sp,
+                        text = "⭐ ${P.rating}",
+                        fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.secondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 8.dp),
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Iconos según los oficios - solo el primero por ahora
-            if (P.oficios.isNotEmpty()) {
+            // Iconos según los oficios
+            if (P.profession.isNotEmpty()) {
                 Icon(
-                    imageVector = getOficioIcon(P.oficios.first()),
+                    imageVector = getOficioIcon(P.profession),
                     contentDescription = null,
                     tint = LightPrimary,
                     modifier =
@@ -154,6 +124,79 @@ fun CardProfessionalSearch(
                             .padding(horizontal = 2.dp),
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ImgCardProfessional(imgUrl: String) {
+    var isLoading by remember(imgUrl) { mutableStateOf(true) }
+    var hasError by remember(imgUrl) { mutableStateOf(false) }
+    var currentImageUrl by remember(imgUrl) { mutableStateOf(imgUrl) }
+
+    LaunchedEffect(imgUrl) {
+        if (imgUrl != currentImageUrl) {
+            isLoading = true
+            hasError = false
+            currentImageUrl = imgUrl
+        }
+    }
+
+    val finalImageUrl =
+        if (!imgUrl.isNullOrEmpty()) {
+            imgUrl
+        } else {
+            "https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
+        }
+
+    Box(
+        modifier =
+            Modifier
+                .size(50.dp)
+                .background(MaterialTheme.colorScheme.surface, CircleShape)
+                .clip(CircleShape),
+        contentAlignment = Alignment.Center,
+    ) {
+        AsyncImage(
+            model = finalImageUrl,
+            contentDescription = "Foto de perfil",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize(),
+            onLoading = {
+                isLoading = true
+                hasError = false
+            },
+            onSuccess = {
+                isLoading = false
+                hasError = false
+            },
+            onError = {
+                isLoading = false
+                hasError = true
+            },
+        )
+
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(40.dp),
+                strokeWidth = 3.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+
+        if (hasError && !isLoading) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "Imagen no disponible",
+                modifier =
+                    Modifier
+                        .size(60.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            CircleShape,
+                        ).padding(12.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
