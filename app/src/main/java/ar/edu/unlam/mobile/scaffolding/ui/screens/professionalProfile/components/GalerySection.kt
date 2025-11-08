@@ -1,5 +1,11 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 
+import android.Manifest
+import android.net.Uri
+import android.os.Environment
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,22 +29,28 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import ar.edu.unlam.mobile.scaffolding.R
+import java.io.File
 
 @Composable
 fun GallerySection(
     modifier: Modifier = Modifier,
-    isMyProfile: Boolean = false,
-    onAddItem: () -> Unit = {}, // Callback para agregar nuevo item
+    isProfileHV: Boolean = false,
 ) {
     val galleryItems =
         remember {
@@ -52,23 +64,50 @@ fun GallerySection(
             )
         }
 
+    // Estado para controlar si mostrar la cámara
+    var showCamera by remember { mutableStateOf(false) }
+
+    // Manejar el resultado de la cámara
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture(),
+        ) { success ->
+            if (success) {
+                // La foto fue tomada exitosamente
+                // Aquí puedes manejar la imagen capturada
+                // La imagen se guarda en el URI que proporcionaste
+            }
+        }
+
+    // Manejar permisos de la cámara
+    val permissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (isGranted) {
+                showCamera = true
+            } else {
+                // Mostrar mensaje de que se necesita el permiso
+            }
+        }
+
     Column(
         modifier =
             modifier
                 .fillMaxWidth()
                 .then(
-                    if (isMyProfile) {
+                    if (isProfileHV) {
                         Modifier.padding(16.dp, 0.dp, 16.dp, 16.dp)
                     } else {
                         Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp)
                     },
                 ),
     ) {
-        if (isMyProfile) {
+        if (isProfileHV) {
             // Scroll horizontal para mi perfil con botón agregar primero
             // Título de la sección
             Text(
-                text = if (isMyProfile) "Mis Trabajos" else "",
+                text = if (isProfileHV) "Mis Trabajos" else "",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp),
@@ -82,7 +121,10 @@ fun GallerySection(
                 // Primero el botón de agregar
                 item {
                     AddGalleryItemCard(
-                        onAddClick = onAddItem,
+                        onAddClick = {
+                            // Verificar permiso antes de abrir la cámara
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        },
                         modifier =
                             Modifier
                                 .width(150.dp)
@@ -98,7 +140,7 @@ fun GallerySection(
                             Modifier
                                 .width(150.dp)
                                 .aspectRatio(0.9f),
-                        isMyProfile,
+                        isProfileHV,
                     )
                 }
             }
@@ -117,7 +159,7 @@ fun GallerySection(
                             modifier =
                                 Modifier
                                     .weight(1f),
-                            isMyProfile,
+                            isProfileHV,
                         )
                     }
 
@@ -130,6 +172,12 @@ fun GallerySection(
                     Spacer(modifier = Modifier.height(2.dp))
                 }
             }
+        }
+    }
+    // Lógica para abrir la cámara
+    if (showCamera) {
+        OpenCamera(cameraLauncher = cameraLauncher) {
+            showCamera = false
         }
     }
 }
@@ -200,7 +248,7 @@ fun GalleryItemCard(
             modifier
                 .aspectRatio(0.9f),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(if (isMyProfile) 8.dp else 0.dp),
+        shape = RoundedCornerShape(if (isMyProfile) 8.dp else 5.dp),
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -223,27 +271,6 @@ fun GalleryItemCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-            ) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                if (item.subtitle.isNotEmpty()) {
-                    Text(
-                        text = item.subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
         }
     }
 }
@@ -253,3 +280,42 @@ data class GalleryItem(
     val subtitle: String,
     val imageRes: Int,
 )
+
+@Composable
+fun OpenCamera(
+    cameraLauncher: ActivityResultLauncher<Uri>,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+
+    val imageUri =
+        remember {
+            try {
+                // Crear archivo temporal
+                val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                val file =
+                    File.createTempFile(
+                        "IMG_${System.currentTimeMillis()}",
+                        ".jpg",
+                        storageDir,
+                    )
+
+                // Obtener URI usando FileProvider
+                FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.provider",
+                    file,
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+    LaunchedEffect(Unit) {
+        if (imageUri != null) {
+            cameraLauncher.launch(imageUri)
+        }
+        onDismiss()
+    }
+}

@@ -149,7 +149,7 @@ fun MainScreen() {
             composable("feed") {
                 FeedScreen(
                     modifier = Modifier.padding(paddingValue),
-                    onServiceRequest = {},
+                    navController = controller,
                 )
             }
             composable("form") {

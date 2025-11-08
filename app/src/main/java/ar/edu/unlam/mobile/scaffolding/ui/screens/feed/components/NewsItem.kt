@@ -2,6 +2,7 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +49,7 @@ fun NewsItem(
     isLiked: Boolean = false,
     imgUrl: String = "",
     userImgUrl: String = "",
+    onProfessionalClick: () -> Unit = {},
 ) {
     val painter = rememberAsyncImagePainter(model = imgUrl)
     Card(
@@ -65,7 +67,7 @@ fun NewsItem(
                     .padding(vertical = 12.dp, horizontal = 12.dp),
         ) {
             // Header con nombre y profesión
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth().clickable(onClick = onProfessionalClick)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(0.8f),
@@ -172,7 +174,7 @@ fun NewsItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            ServiceButton({}, modifier = Modifier.padding(0.dp))
+            ServiceButton(onProfessionalClick, modifier = Modifier.padding(0.dp))
         }
     }
 }

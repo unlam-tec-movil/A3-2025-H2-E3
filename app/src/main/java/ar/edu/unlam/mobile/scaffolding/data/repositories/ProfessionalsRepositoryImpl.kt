@@ -60,4 +60,5 @@ private fun ProfessionalsDto.toDomain(): Professionals =
         location = this.location,
         keyInfo = this.keyInfo,
         services = this.services,
+        isProfileHV = this.isProfileHV,
     )

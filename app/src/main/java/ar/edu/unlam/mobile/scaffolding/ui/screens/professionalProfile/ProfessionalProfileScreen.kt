@@ -124,7 +124,7 @@ fun ProfessionalProfileScreen(
                             name = uiState.professionals?.name ?: "",
                             profession = uiState.professionals?.profession ?: "",
                             rating = uiState.professionals?.rating ?: 1.0,
-                            isMyProfile = false,
+                            isProfileHV = uiState.professionals?.isProfileHV ?: false,
                             imgUrl = uiState.professionals?.imgUrl ?: "",
                         )
 

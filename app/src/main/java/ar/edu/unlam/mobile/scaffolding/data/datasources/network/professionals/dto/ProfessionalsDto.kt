@@ -7,6 +7,7 @@ data class ProfessionalsDto(
     @SerializedName("createdAt") val createdAt: FirestoreTimestamp,
     @SerializedName("aboutText") val aboutText: String,
     @SerializedName("imgUrl") val imgUrl: String,
+    @SerializedName("isProfileHV") val isProfileHV: Boolean,
     @SerializedName("updatedAt") val updatedAt: FirestoreTimestamp,
     @SerializedName("name") val name: String,
     @SerializedName("profession") val profession: String,

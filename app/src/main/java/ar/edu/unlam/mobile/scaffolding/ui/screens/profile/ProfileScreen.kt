@@ -126,7 +126,7 @@ fun ProfileScreen(
                             name = uiState.professionals?.name ?: "",
                             profession = uiState.professionals?.profession ?: "",
                             rating = uiState.professionals?.rating ?: 1.0,
-                            isMyProfile = true,
+                            isProfileHV = true,
                             imgUrl = uiState.professionals?.imgUrl ?: "",
                         )
 
@@ -152,7 +152,7 @@ fun ProfileScreen(
                                     services = uiState.professionals?.services ?: emptyList(),
                                     isMyProfile = true,
                                 )
-                                GallerySection(isMyProfile = true)
+                                GallerySection(isProfileHV = true)
                             }
                         }
 

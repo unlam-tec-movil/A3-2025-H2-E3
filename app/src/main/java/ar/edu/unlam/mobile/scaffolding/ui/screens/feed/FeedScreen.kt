@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components.NewsItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +34,7 @@ fun FeedScreen(
     viewModel: FeedViewModel = hiltViewModel(),
     onServiceRequest: () -> Unit = {},
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -106,6 +108,7 @@ fun FeedScreen(
                             isLiked = news.isLiked,
                             imgUrl = news.imgUrl.toString(),
                             userImgUrl = news.userImgUrl.toString(),
+                            onProfessionalClick = { navController.navigate("professional/${news.userId}") },
                         )
                     }
                 }
