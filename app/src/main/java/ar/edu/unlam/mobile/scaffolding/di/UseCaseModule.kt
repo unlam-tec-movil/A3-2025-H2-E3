@@ -2,7 +2,9 @@ package ar.edu.unlam.mobile.scaffolding.di
 
 import ar.edu.unlam.mobile.scaffolding.domain.repository.NewsRepository
 import ar.edu.unlam.mobile.scaffolding.domain.repository.ProfessionalsRepository
+import ar.edu.unlam.mobile.scaffolding.domain.repository.ReviewsRepository
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.newUseCase.GetNewsUseCase
+import ar.edu.unlam.mobile.scaffolding.domain.usecase.reviewsUseCase.GetReviewsUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsUseCase
 import dagger.Module
@@ -26,4 +28,8 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideGetProfessionalsUseCase(repository: ProfessionalsRepository): GetProfessionalsUseCase = GetProfessionalsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetReviewsByIdUseCase(repository: ReviewsRepository): GetReviewsUseCase = GetReviewsUseCase(repository)
 }
