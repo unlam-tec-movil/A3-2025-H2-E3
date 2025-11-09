@@ -59,6 +59,7 @@ fun ProfessionalProfileScreen(
     var selectedTab by remember { mutableStateOf(ProfileTab.ABOUT) }
 
     val uiState by viewModel.uiState.collectAsState()
+    val uiStateReview by viewModel.uiStateReview.collectAsState()
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -179,8 +180,26 @@ fun ProfessionalProfileScreen(
 
                             ProfileTab.REVIEW -> {
                                 items(1) {
-                                    ReviewSection()
-                                    Spacer(modifier = Modifier.height(80.dp))
+                                    when {
+                                        uiState.isLoading -> {
+                                            Column(
+                                                modifier = Modifier.fillMaxSize(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                            ) {
+                                                CircularProgressIndicator()
+                                                Text(
+                                                    text = "Cargando Perfil...",
+                                                    modifier = Modifier.padding(top = 16.dp),
+                                                )
+                                            }
+                                        }
+
+                                        else -> {
+                                            ReviewSection(reviews = uiStateReview.reviews)
+                                            Spacer(modifier = Modifier.height(80.dp))
+                                        }
+                                    }
                                 }
                             }
                         }

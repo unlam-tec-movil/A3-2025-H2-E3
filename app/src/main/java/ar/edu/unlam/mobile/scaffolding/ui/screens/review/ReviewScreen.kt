@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -40,10 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
-import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileHeader
-import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,11 +114,11 @@ fun ReviewScreen(
                     MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                     ),
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.onSurface,
             )
-
+            Spacer(modifier = Modifier.height(20.dp))
             // Star Rating
             Row(
                 modifier =
@@ -130,14 +132,15 @@ fun ReviewScreen(
                         onClick = { selectedRating = i },
                         modifier =
                             Modifier
-                                .size(48.dp)
+                                .size(50.dp)
                                 .clip(CircleShape),
                     )
+                    Spacer(modifier = Modifier.width(5.dp))
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         // Written Review Section
         Column(
@@ -152,11 +155,11 @@ fun ReviewScreen(
                     MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
                     ),
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
                 value = writtenReview,
@@ -247,15 +250,20 @@ fun RatingStar(
                 ),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = if (isSelected) "★" else "☆",
-            fontSize = 32.sp,
-            color =
-                if (isSelected) {
-                    Color(0xFFFFC107) // Amber color for selected stars
-                } else {
-                    LightPrimary.copy(alpha = 0.5f)
-                },
-        )
+        if (isSelected) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Start",
+                tint = Color(0xFFFFC107),
+                modifier = Modifier.size(45.dp).padding(0.dp),
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.StarBorder,
+                contentDescription = "Start",
+                tint = Color.White,
+                modifier = Modifier.size(45.dp).padding(0.dp),
+            )
+        }
     }
 }

@@ -3,7 +3,6 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.review
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
 import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import dagger.hilt.android.lifecycle.HiltViewModel

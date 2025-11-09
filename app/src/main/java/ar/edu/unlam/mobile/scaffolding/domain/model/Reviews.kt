@@ -8,4 +8,5 @@ data class Reviews(
     val stars: Double,
     val userImageUrl: String,
     val userName: String,
+    val message: String,
 )

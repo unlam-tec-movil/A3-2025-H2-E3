@@ -1,7 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews
 
-import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.dto.CreateProfessionalsRequest
-import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.dto.ProfessionalsDto
 import ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews.dto.CreateReviewsRequest
 import ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews.dto.ReviewsDto
 import retrofit2.Response

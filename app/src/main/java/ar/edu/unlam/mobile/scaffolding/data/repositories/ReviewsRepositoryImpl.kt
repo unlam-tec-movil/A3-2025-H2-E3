@@ -64,4 +64,5 @@ private fun ReviewsDto.toDomain(): Reviews =
         stars = this.stars,
         userImageUrl = this.userImageUrl,
         userName = this.userName,
+        message = this.message,
     )
