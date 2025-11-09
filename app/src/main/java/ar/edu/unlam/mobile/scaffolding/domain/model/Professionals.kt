@@ -15,4 +15,5 @@ data class Professionals(
     val keyInfo: Map<String, String>,
     val services: List<String>,
     val isProfileHV: Boolean,
+    val isProfessional: Boolean,
 )

@@ -35,6 +35,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -144,6 +145,7 @@ fun MainScreen() {
                 ProfessionalProfileScreen(
                     modifier = Modifier.padding(paddingValue),
                     viewModel = hiltViewModel(backStackEntry),
+                    navController = controller,
                 )
             }
             composable("feed") {
@@ -152,6 +154,20 @@ fun MainScreen() {
                     navController = controller,
                 )
             }
+
+            composable(
+                route = "review/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
+                ReviewScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    reviewViewModel = hiltViewModel(backStackEntry),
+                    navController = controller,
+                )
+            }
+
             composable("form") {
                 /*
                  * FormScreen(
@@ -159,7 +175,7 @@ fun MainScreen() {
                     snackbarHostState = snackBarHostState,
                 )
                  * */
-                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
+                ProfileScreen(modifier = Modifier.padding(paddingValue))
             }
             composable("introduction") {
                 IntroductionScreen(

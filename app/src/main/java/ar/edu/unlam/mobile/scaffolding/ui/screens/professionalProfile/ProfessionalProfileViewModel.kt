@@ -28,6 +28,8 @@ class ProfessionalProfileViewModel
             if (professionalId.isNotEmpty()) loadProfessional(professionalId)
         }
 
+        fun getProfessionalId(): String = professionalId
+
         fun loadProfessional(id: String) {
             viewModelScope.launch {
                 _uiState.update { it.copy(isLoading = true, error = null) }

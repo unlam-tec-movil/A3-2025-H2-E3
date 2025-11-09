@@ -3,6 +3,7 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
+import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +29,7 @@ class ProfileViewModel
             viewModelScope.launch {
                 _uiState.update { it.copy(isLoading = true, error = null) }
 
-                getProfessionalsByIdUseCase("7hVfs5ykM3k22wvq5O5d").fold(
+                getProfessionalsByIdUseCase(UserId.ID).fold(
                     onSuccess = { professionals ->
                         _uiState.update {
                             it.copy(

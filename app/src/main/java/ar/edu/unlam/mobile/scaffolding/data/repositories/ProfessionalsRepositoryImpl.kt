@@ -61,4 +61,5 @@ private fun ProfessionalsDto.toDomain(): Professionals =
         keyInfo = this.keyInfo,
         services = this.services,
         isProfileHV = this.isProfileHV,
+        isProfessional = this.isProfessional ?: false,
     )
