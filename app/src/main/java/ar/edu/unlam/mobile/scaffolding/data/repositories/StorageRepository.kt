@@ -32,6 +32,23 @@ class StorageRepository {
         }
     }
 
+    suspend fun getUserWorkImages(userId: String): List<String> {
+        try {
+            val userWorksRef = storage.reference.child("works").child(userId)
+            val result = userWorksRef.listAll().await()
+
+            val imageUrls = mutableListOf<String>()
+            for (item in result.items) {
+                val url = item.downloadUrl.await().toString()
+                imageUrls.add(url)
+            }
+
+            return imageUrls
+        } catch (e: Exception) {
+            throw Exception("Error al obtener imágenes: ${e.message}")
+        }
+    }
+
     suspend fun deleteImage(imageUrl: String) {
         try {
             val storageRef = storage.getReferenceFromUrl(imageUrl)
