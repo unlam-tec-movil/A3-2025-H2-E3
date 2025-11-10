@@ -1,8 +1,10 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 
 import android.Manifest
+import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import ar.edu.unlam.mobile.scaffolding.R
+import ar.edu.unlam.mobile.scaffolding.data.repositories.StorageRepository
+import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @Composable
@@ -64,8 +72,12 @@ fun GallerySection(
             )
         }
 
-    // Estado para controlar si mostrar la cámara
+    // Estados simples
     var showCamera by remember { mutableStateOf(false) }
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val context = LocalContext.current
+    val storageRepository = remember { StorageRepository() }
 
     // Manejar el resultado de la cámara
     val cameraLauncher =
@@ -73,10 +85,13 @@ fun GallerySection(
             contract = ActivityResultContracts.TakePicture(),
         ) { success ->
             if (success) {
-                // La foto fue tomada exitosamente
-                // Aquí puedes manejar la imagen capturada
-                // La imagen se guarda en el URI que proporcionaste
+                // La foto fue tomada exitosamente, ahora subirla
+                capturedImageUri?.let { uri ->
+                    uploadImageToFirebase(uri, storageRepository, context)
+                }
+                Toast.makeText(context, "La foto se subio exitosamente", Toast.LENGTH_LONG).show()
             }
+            showCamera = false
         }
 
     // Manejar permisos de la cámara
@@ -87,7 +102,7 @@ fun GallerySection(
             if (isGranted) {
                 showCamera = true
             } else {
-                // Mostrar mensaje de que se necesita el permiso
+                Toast.makeText(context, "Se necesita permiso de cámara para tomar fotos", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -98,7 +113,6 @@ fun GallerySection(
                 .padding(16.dp),
     ) {
         if (isProfileHV) {
-            // Scroll horizontal para mi perfil con botón agregar primero
             // Título de la sección
             Text(
                 text = if (isProfileHV) "Mis Trabajos" else "",
@@ -126,7 +140,6 @@ fun GallerySection(
                     )
                 }
 
-                // Luego los items existentes
                 items(galleryItems) { item ->
                     GalleryItemCard(
                         item = item,
@@ -134,7 +147,7 @@ fun GallerySection(
                             Modifier
                                 .width(150.dp)
                                 .aspectRatio(0.9f),
-                        isProfileHV,
+                        isProfileHV = isProfileHV,
                     )
                 }
             }
@@ -150,10 +163,8 @@ fun GallerySection(
                     rowItems.forEach { item ->
                         GalleryItemCard(
                             item = item,
-                            modifier =
-                                Modifier
-                                    .weight(1f),
-                            isProfileHV,
+                            modifier = Modifier.weight(1f),
+                            isProfileHV = isProfileHV,
                         )
                     }
 
@@ -168,11 +179,15 @@ fun GallerySection(
             }
         }
     }
+
     // Lógica para abrir la cámara
     if (showCamera) {
-        OpenCamera(cameraLauncher = cameraLauncher) {
-            showCamera = false
-        }
+        OpenCamera(
+            cameraLauncher = cameraLauncher,
+            onImageCaptured = { uri ->
+                capturedImageUri = uri
+            },
+        )
     }
 }
 
@@ -199,7 +214,6 @@ fun AddGalleryItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            // Icono de +
             Box(
                 modifier =
                     Modifier
@@ -235,14 +249,12 @@ fun AddGalleryItemCard(
 fun GalleryItemCard(
     item: GalleryItem,
     modifier: Modifier = Modifier,
-    isMyProfile: Boolean,
+    isProfileHV: Boolean,
 ) {
     Card(
-        modifier =
-            modifier
-                .aspectRatio(0.9f),
+        modifier = modifier.aspectRatio(0.9f),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(if (isMyProfile) 8.dp else 5.dp),
+        shape = RoundedCornerShape(if (isProfileHV) 8.dp else 5.dp),
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -278,7 +290,7 @@ data class GalleryItem(
 @Composable
 fun OpenCamera(
     cameraLauncher: ActivityResultLauncher<Uri>,
-    onDismiss: () -> Unit,
+    onImageCaptured: (Uri) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -309,7 +321,37 @@ fun OpenCamera(
     LaunchedEffect(Unit) {
         if (imageUri != null) {
             cameraLauncher.launch(imageUri)
+            onImageCaptured(imageUri)
         }
-        onDismiss()
+    }
+}
+
+// Función para subir la imagen a Firebase
+private fun uploadImageToFirebase(
+    imageUri: Uri,
+    storageRepository: StorageRepository,
+    context: Context,
+) {
+    // Usar el ID de usuario hardcodeado
+    val userId = UserId.ID
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            // Subir la imagen
+            val imageUrl =
+                storageRepository.uploadWorkImage(
+                    userId = userId,
+                    imageUri = imageUri,
+                )
+
+            // La imagen se subió exitosamente
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Imagen subida exitosamente", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Error al subir imagen: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

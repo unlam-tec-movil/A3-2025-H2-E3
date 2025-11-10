@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kotlin.compose.compiler)
+    id("com.google.gms.google-services")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -109,4 +110,9 @@ dependencies {
 
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    // Firebase Storage
+    implementation("com.google.firebase:firebase-storage-ktx")
 }
