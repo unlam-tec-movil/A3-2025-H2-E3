@@ -88,8 +88,12 @@ class ProfessionalProfileViewModel
             }
         }
 
+        fun loadReviewsTab() {
+            loadReviews(professionalId)
+        }
+
         fun refreshProfessional() {
             loadProfessional(professionalId)
-            loadReviews(professionalId) // ← AÑADIR TAMBIÉN AQUÍ
+            loadReviews(professionalId)
         }
     }

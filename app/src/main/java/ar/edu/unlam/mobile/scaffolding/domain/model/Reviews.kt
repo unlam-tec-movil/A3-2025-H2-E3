@@ -1,11 +1,13 @@
 package ar.edu.unlam.mobile.scaffolding.domain.model
 
+import ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews.dto.FirestoreTimestamp
+
 data class Reviews(
     val id: String,
-    val updatedAt: ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews.dto.FirestoreTimestamp,
-    val createdAt: ar.edu.unlam.mobile.scaffolding.data.datasources.network.reviews.dto.FirestoreTimestamp,
+    val updatedAt: FirestoreTimestamp,
+    val createdAt: FirestoreTimestamp,
     val professionalId: String,
-    val stars: Double,
+    val stars: Int,
     val userImageUrl: String,
     val userName: String,
     val message: String,

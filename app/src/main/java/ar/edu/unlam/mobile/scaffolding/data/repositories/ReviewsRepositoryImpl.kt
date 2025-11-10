@@ -30,13 +30,11 @@ class ReviewsRepositoryImpl
             try {
                 val request =
                     CreateReviewsRequest(
-                        id = reviews.id,
-                        updatedAt = reviews.updatedAt,
-                        createdAt = reviews.createdAt,
                         professionalId = reviews.professionalId,
-                        stars = reviews.stars,
+                        stars = reviews.stars, // ✅ CORREGIDO: No convertir a Double
                         userImageUrl = reviews.userImageUrl,
                         userName = reviews.userName,
+                        message = reviews.message, // ✅ AGREGADO
                     )
                 val response = reviewsApi.createReviews(request)
                 if (response.isSuccessful) {
@@ -55,9 +53,23 @@ class ReviewsRepositoryImpl
             }
     }
 
+// ✅ Extension para mapear DTO a Domain
 private fun ReviewsDto.toDomain(): Reviews =
     Reviews(
         id = this.id ?: "",
+        updatedAt = this.updatedAt,
+        createdAt = this.createdAt,
+        professionalId = this.professionalId,
+        stars = this.stars,
+        userImageUrl = this.userImageUrl,
+        userName = this.userName,
+        message = this.message,
+    )
+
+// ✅ Extension para mapear Domain a DTO (si la necesitas)
+fun Reviews.toDto(): ReviewsDto =
+    ReviewsDto(
+        id = this.id,
         updatedAt = this.updatedAt,
         createdAt = this.createdAt,
         professionalId = this.professionalId,

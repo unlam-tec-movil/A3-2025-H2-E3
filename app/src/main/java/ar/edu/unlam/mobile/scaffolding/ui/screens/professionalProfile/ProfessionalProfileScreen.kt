@@ -153,6 +153,7 @@ fun ProfessionalProfileScreen(
                             TabSection(
                                 selectedTab = selectedTab,
                                 onTabSelected = { tab -> selectedTab = tab },
+                                reloadReview = { viewModel.loadReviewsTab() },
                             )
                         }
 
@@ -181,7 +182,7 @@ fun ProfessionalProfileScreen(
                             ProfileTab.REVIEW -> {
                                 items(1) {
                                     when {
-                                        uiState.isLoading -> {
+                                        uiStateReview.isLoading -> {
                                             Column(
                                                 modifier = Modifier.fillMaxSize(),
                                                 verticalArrangement = Arrangement.Center,
@@ -189,7 +190,7 @@ fun ProfessionalProfileScreen(
                                             ) {
                                                 CircularProgressIndicator()
                                                 Text(
-                                                    text = "Cargando Perfil...",
+                                                    text = "Cargando reseñas...",
                                                     modifier = Modifier.padding(top = 16.dp),
                                                 )
                                             }

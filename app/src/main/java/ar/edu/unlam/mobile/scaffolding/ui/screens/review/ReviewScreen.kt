@@ -21,11 +21,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -51,8 +53,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewScreen(
-    onBackClick: () -> Unit = {},
-    onSubmitReview: () -> Unit = {},
     modifier: Modifier = Modifier,
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     navController: NavHostController,
@@ -60,6 +60,8 @@ fun ReviewScreen(
     val reviewUiState by reviewViewModel.uiState.collectAsState()
     var selectedRating by remember { mutableIntStateOf(0) }
     var writtenReview by remember { mutableStateOf("") }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Column(
         modifier =
@@ -87,6 +89,7 @@ fun ReviewScreen(
         }
 
         HorizontalDivider()
+
         // Service Provider Info
         ProfileHeader(
             modifier = Modifier,
@@ -96,6 +99,7 @@ fun ReviewScreen(
             isProfileHV = false,
             imgUrl = reviewUiState.profileOwner?.imgUrl ?: "",
         )
+
         // Divider
         HorizontalDivider()
 
@@ -119,6 +123,7 @@ fun ReviewScreen(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(20.dp))
+
             // Star Rating
             Row(
                 modifier =
@@ -188,7 +193,19 @@ fun ReviewScreen(
                     .padding(horizontal = 16.dp),
         ) {
             Button(
-                onClick = onSubmitReview,
+                onClick = {
+                    reviewViewModel.submitReview(
+                        stars = selectedRating,
+                        message = writtenReview,
+                        onSuccess = {
+                            navController.popBackStack()
+                        },
+                        onError = { error ->
+                            // Error manejado automáticamente por el ViewModel
+                        },
+                    )
+                    navController.popBackStack()
+                },
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -196,17 +213,25 @@ fun ReviewScreen(
                         .clip(RoundedCornerShape(12.dp))
                         .background(LightPrimary),
                 shape = RoundedCornerShape(12.dp),
-                enabled = selectedRating > 0,
+                enabled = selectedRating > 0 && writtenReview.isNotBlank() && !reviewUiState.isSubmitting,
             ) {
-                Text(
-                    text = "Submit Review",
-                    style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.White,
-                        ),
-                )
+                if (reviewUiState.isSubmitting) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(
+                        text = "Enviar Reseña",
+                        style =
+                            MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = Color.White,
+                            ),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -222,7 +247,7 @@ fun ReviewScreen(
                 shape = RoundedCornerShape(12.dp),
             ) {
                 Text(
-                    text = "Skip for now",
+                    text = "Saltar por ahora",
                     style =
                         MaterialTheme.typography.bodyMedium.copy(
                             color = LightPrimary,
@@ -261,7 +286,7 @@ fun RatingStar(
             Icon(
                 imageVector = Icons.Default.StarBorder,
                 contentDescription = "Start",
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(45.dp).padding(0.dp),
             )
         }

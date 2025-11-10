@@ -12,7 +12,7 @@ data class ReviewsDto(
     @SerializedName("updatedAt") val updatedAt: FirestoreTimestamp,
     @SerializedName("createdAt") val createdAt: FirestoreTimestamp,
     @SerializedName("professionalId") val professionalId: String,
-    @SerializedName("stars") val stars: Double,
+    @SerializedName("stars") val stars: Int,
     @SerializedName("userImageUrl") val userImageUrl: String,
     @SerializedName("userName") val userName: String,
     @SerializedName("message") val message: String,

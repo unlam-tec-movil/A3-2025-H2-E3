@@ -4,6 +4,7 @@ import ar.edu.unlam.mobile.scaffolding.domain.repository.NewsRepository
 import ar.edu.unlam.mobile.scaffolding.domain.repository.ProfessionalsRepository
 import ar.edu.unlam.mobile.scaffolding.domain.repository.ReviewsRepository
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.newUseCase.GetNewsUseCase
+import ar.edu.unlam.mobile.scaffolding.domain.usecase.reviewsUseCase.CreateReviewsUseCase // ✅ NUEVO
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.reviewsUseCase.GetReviewsUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsUseCase
@@ -32,4 +33,8 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideGetReviewsByIdUseCase(repository: ReviewsRepository): GetReviewsUseCase = GetReviewsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideCreateReviewsUseCase(repository: ReviewsRepository): CreateReviewsUseCase = CreateReviewsUseCase(repository)
 }
