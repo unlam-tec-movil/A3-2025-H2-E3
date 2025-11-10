@@ -31,6 +31,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.EditProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
@@ -127,7 +128,7 @@ fun MainScreen() {
     ) { paddingValue ->
         // NavHost es el componente que funciona como contenedor de los otros componentes que
         // podrán ser destinos de navegación.
-        NavHost(navController = controller, startDestination = "introduction") {
+        NavHost(navController = controller, startDestination = "feed") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
@@ -154,7 +155,11 @@ fun MainScreen() {
                     navController = controller,
                 )
             }
-
+            composable("editUser") {
+                EditProfileScreen(
+                    modifier = Modifier.padding(paddingValue),
+                )
+            }
             composable(
                 route = "review/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
@@ -175,7 +180,10 @@ fun MainScreen() {
                     snackbarHostState = snackBarHostState,
                 )
                  * */
-                ProfileScreen(modifier = Modifier.padding(paddingValue))
+                ProfileScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    navController = controller,
+                )
             }
             composable("introduction") {
                 IntroductionScreen(

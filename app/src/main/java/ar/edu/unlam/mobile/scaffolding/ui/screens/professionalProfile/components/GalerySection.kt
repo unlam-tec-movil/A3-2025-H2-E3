@@ -95,13 +95,7 @@ fun GallerySection(
         modifier =
             modifier
                 .fillMaxWidth()
-                .then(
-                    if (isProfileHV) {
-                        Modifier.padding(16.dp, 0.dp, 16.dp, 16.dp)
-                    } else {
-                        Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp)
-                    },
-                ),
+                .padding(16.dp),
     ) {
         if (isProfileHV) {
             // Scroll horizontal para mi perfil con botón agregar primero
@@ -151,7 +145,7 @@ fun GallerySection(
             chunkedItems.forEachIndexed { index, rowItems ->
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     rowItems.forEach { item ->
                         GalleryItemCard(
@@ -169,7 +163,7 @@ fun GallerySection(
                 }
                 // Espacio entre filas
                 if (index < chunkedItems.size - 1) {
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
         }

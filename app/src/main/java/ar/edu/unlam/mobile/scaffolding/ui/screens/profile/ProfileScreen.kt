@@ -31,10 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.AboutSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.GallerySection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.KeyInfo
@@ -43,20 +43,16 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ReviewSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.TabSection
 
-@Preview
-@Composable
-fun ViewProfileScreen() {
-    ProfileScreen()
-}
-
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = hiltViewModel(),
+    navController: NavController,
 ) {
     // Estado para la pestaña seleccionada
     var selectedTab by remember { mutableStateOf(ProfileTab.ABOUT) }
     val uiState by viewModel.uiState.collectAsState()
+    val uiStateReview by viewModel.uiStateReview.collectAsState()
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -170,7 +166,7 @@ fun ProfileScreen(
 
                             ProfileTab.REVIEW -> {
                                 items(1) {
-                                    ReviewSection()
+                                    ReviewSection(reviews = uiStateReview.reviews)
                                 }
                             }
                         }
@@ -182,12 +178,12 @@ fun ProfileScreen(
             }
         }
 
-        // FAB flotante - similar al de ProfessionalProfileScreen
+        // FAB flotante
 
         if (selectedTab == ProfileTab.ABOUT) {
             FloatingActionButton(
                 onClick = {
-                    // Aquí tu acción para editar
+                    navController.navigate("editUser")
                 },
                 modifier =
                     Modifier
