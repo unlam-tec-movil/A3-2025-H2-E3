@@ -37,12 +37,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.AboutSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ActionButtons
-import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.GallerySection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.KeyInfo
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileHeader
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileTab
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ReviewSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.TabSection
+import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery.GallerySection
 
 @Composable
 fun ProfessionalProfileScreen(
@@ -174,7 +174,7 @@ fun ProfessionalProfileScreen(
 
                             ProfileTab.GALLERY -> {
                                 items(1) {
-                                    GallerySection()
+                                    GallerySection(userIdGalery = uiState.professionals?.id ?: "")
                                 }
                             }
 

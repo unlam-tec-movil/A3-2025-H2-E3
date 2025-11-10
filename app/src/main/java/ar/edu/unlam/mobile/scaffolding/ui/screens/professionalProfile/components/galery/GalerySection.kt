@@ -1,4 +1,4 @@
-package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
+package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery
 
 import android.Manifest
 import android.content.Context
@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,13 +28,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
-import ar.edu.unlam.mobile.scaffolding.R
 import ar.edu.unlam.mobile.scaffolding.data.repositories.StorageRepository
 import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import kotlinx.coroutines.CoroutineScope
@@ -47,25 +47,49 @@ import java.io.File
 fun GallerySection(
     modifier: Modifier = Modifier,
     isProfileHV: Boolean = false,
+    userIdGalery: String = "",
 ) {
-    val galleryItems =
-        remember {
-            listOf(
-                GalleryItem("Instalación", "de Cañerías", R.drawable.plomeria),
-                GalleryItem("Cambio", "de Sistema", R.drawable.gas),
-                GalleryItem("Instalación", "de Tablero", R.drawable.tablero),
-                GalleryItem("Reparación", "de Muebles", R.drawable.carpintero),
-                GalleryItem("Limpieza", "Profunda", R.drawable.limpieza),
-                GalleryItem("Afilado", "de Herramientas", R.drawable.work1),
-            )
-        }
+    val context = LocalContext.current
+    val storageRepository = remember { StorageRepository() }
 
-    // Estados simples
+    // Estado para las URLs de las imágenes
+    var galleryUrls by remember { mutableStateOf<List<String>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    // Estados para la cámara
     var showCamera by remember { mutableStateOf(false) }
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val context = LocalContext.current
-    val storageRepository = remember { StorageRepository() }
+    // Función para cargar imágenes desde Firebase
+    val loadImages =
+        remember {
+            {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val userId = if (userIdGalery.isNotEmpty()) userIdGalery else UserId.ID
+                        val images = storageRepository.getUserWorkImages(userId)
+                        withContext(Dispatchers.Main) {
+                            galleryUrls = images
+                            isLoading = false
+                            errorMessage = null
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            errorMessage = "Error al cargar imágenes: ${e.message}"
+                            isLoading = false
+                            // En caso de error, mostrar imágenes de ejemplo
+                            galleryUrls = getFallbackImages()
+                        }
+                    }
+                }
+            }
+        }
+
+    // Cargar imágenes al iniciar el composable
+    LaunchedEffect(Unit) {
+        loadImages()
+    }
 
     // Manejar el resultado de la cámara
     val cameraLauncher =
@@ -73,11 +97,13 @@ fun GallerySection(
             contract = ActivityResultContracts.TakePicture(),
         ) { success ->
             if (success) {
-                // La foto fue tomada exitosamente, ahora subirla
                 capturedImageUri?.let { uri ->
-                    uploadImageToFirebase(uri, storageRepository, context)
+                    uploadImageToFirebase(uri, storageRepository, context) {
+                        // Recargar todas las imágenes después de subir una nueva
+                        loadImages()
+                    }
                 }
-                Toast.makeText(context, "La foto se subio exitosamente", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "La foto se subió exitosamente", Toast.LENGTH_LONG).show()
             }
             showCamera = false
         }
@@ -110,38 +136,93 @@ fun GallerySection(
                 fontSize = 18.sp,
             )
 
+            // Mostrar estado de carga
+            if (isLoading) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("Cargando imágenes...")
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
+
+            // Mostrar error si existe
+            errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
+
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Primero el botón de agregar
-                item {
-                    AddGalleryItemCard(
-                        onAddClick = {
-                            // Verificar permiso antes de abrir la cámara
-                            permissionLauncher.launch(Manifest.permission.CAMERA)
-                        },
-                        modifier =
-                            Modifier
-                                .width(150.dp)
-                                .aspectRatio(0.9f),
-                    )
+                // Primero el botón de agregar (solo en perfil propio)
+                if (isProfileHV) {
+                    item {
+                        AddGalleryItemCard(
+                            onAddClick = {
+                                permissionLauncher.launch(Manifest.permission.CAMERA)
+                            },
+                            modifier =
+                                Modifier
+                                    .width(150.dp)
+                                    .aspectRatio(0.9f),
+                        )
+                    }
                 }
 
-                items(galleryItems) { item ->
+                // Mostrar las imágenes de Firebase
+                items(galleryUrls) { imageUrl ->
                     GalleryItemCard(
-                        item = item,
+                        imageUrl = imageUrl,
                         modifier =
                             Modifier
                                 .width(150.dp)
                                 .aspectRatio(0.9f),
                         isProfileHV = isProfileHV,
+                        onDeleteClick =
+                            if (isProfileHV) {
+                                {
+                                    // Función para eliminar imagen
+                                    deleteImageFromFirebase(imageUrl, storageRepository, context) {
+                                        // Recargar todas las imágenes después de eliminar
+                                        loadImages()
+                                    }
+                                }
+                            } else {
+                                null
+                            },
                     )
                 }
             }
         } else {
             // Grid 2 columnas para otros perfiles
-            val chunkedItems = galleryItems.chunked(2)
+            if (isLoading) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Cargando imágenes...")
+                }
+            }
+
+            errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
+
+            val chunkedItems = galleryUrls.chunked(2)
 
             chunkedItems.forEachIndexed { index, rowItems ->
                 Row(
@@ -150,9 +231,10 @@ fun GallerySection(
                 ) {
                     rowItems.forEach { item ->
                         GalleryItemCard(
-                            item = item,
+                            imageUrl = item,
                             modifier = Modifier.weight(1f),
                             isProfileHV = isProfileHV,
+                            onDeleteClick = null, // No mostrar botón de eliminar en perfiles ajenos
                         )
                     }
 
@@ -160,7 +242,6 @@ fun GallerySection(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
-                // Espacio entre filas
                 if (index < chunkedItems.size - 1) {
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -178,12 +259,6 @@ fun GallerySection(
         )
     }
 }
-
-data class GalleryItem(
-    val title: String,
-    val subtitle: String,
-    val imageRes: Int,
-)
 
 @Composable
 fun OpenCamera(
@@ -229,21 +304,21 @@ private fun uploadImageToFirebase(
     imageUri: Uri,
     storageRepository: StorageRepository,
     context: Context,
+    onSuccess: () -> Unit = {},
 ) {
-    // Usar el ID de usuario hardcodeado
     val userId = UserId.ID
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
             // Subir la imagen
-            val imageUrl =
-                storageRepository.uploadWorkImage(
-                    userId = userId,
-                    imageUri = imageUri,
-                )
+            storageRepository.uploadWorkImage(
+                userId = userId,
+                imageUri = imageUri,
+            )
 
-            // La imagen se subió exitosamente
+            // Notificar éxito
             withContext(Dispatchers.Main) {
+                onSuccess()
                 Toast.makeText(context, "Imagen subida exitosamente", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
@@ -253,3 +328,32 @@ private fun uploadImageToFirebase(
         }
     }
 }
+
+// Función para eliminar imagen de Firebase
+private fun deleteImageFromFirebase(
+    imageUrl: String,
+    storageRepository: StorageRepository,
+    context: Context,
+    onSuccess: () -> Unit = {},
+) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            storageRepository.deleteImage(imageUrl)
+            withContext(Dispatchers.Main) {
+                onSuccess()
+                Toast.makeText(context, "Imagen eliminada", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Error al eliminar imagen: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+}
+
+// Función auxiliar para obtener imágenes de fallback
+private fun getFallbackImages(): List<String> =
+    listOf(
+        "https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlDj5uzxqgO1KC5msT8g9SNZmHOnyOC0yTvw&s",
+    )

@@ -1,4 +1,4 @@
-package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
+package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
