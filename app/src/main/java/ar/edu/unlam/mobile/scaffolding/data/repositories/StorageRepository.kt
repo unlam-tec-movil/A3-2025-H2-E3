@@ -14,21 +14,36 @@ class StorageRepository {
         imageUri: Uri,
     ): String {
         try {
-            // Crear nombre único para la imagen
             val imageName = "${UUID.randomUUID()}.jpg"
             val imageRef: StorageReference =
                 storage.reference
-                    .child("works") // carpeta principal
-                    .child(userId) // subcarpeta por usuario
+                    .child("works")
+                    .child(userId)
                     .child(imageName)
 
-            // Subir la imagen
             imageRef.putFile(imageUri).await()
-
-            // Obtener la URL de descarga
             return imageRef.downloadUrl.await().toString()
         } catch (e: Exception) {
-            throw Exception("Error al subir imagen: ${e.message}")
+            throw Exception("Error al subir imagen de trabajo: ${e.message}")
+        }
+    }
+
+    suspend fun uploadNewsImage(
+        userId: String,
+        imageUri: Uri,
+    ): String {
+        try {
+            val imageName = "${UUID.randomUUID()}.jpg"
+            val imageRef: StorageReference =
+                storage.reference
+                    .child("news") // Nueva carpeta para noticias
+                    .child(userId) // Subcarpeta por usuario
+                    .child(imageName)
+
+            imageRef.putFile(imageUri).await()
+            return imageRef.downloadUrl.await().toString()
+        } catch (e: Exception) {
+            throw Exception("Error al subir imagen de noticia: ${e.message}")
         }
     }
 
@@ -45,7 +60,24 @@ class StorageRepository {
 
             return imageUrls
         } catch (e: Exception) {
-            throw Exception("Error al obtener imágenes: ${e.message}")
+            throw Exception("Error al obtener imágenes de trabajo: ${e.message}")
+        }
+    }
+
+    suspend fun getUserNewsImages(userId: String): List<String> {
+        try {
+            val userNewsRef = storage.reference.child("news").child(userId)
+            val result = userNewsRef.listAll().await()
+
+            val imageUrls = mutableListOf<String>()
+            for (item in result.items) {
+                val url = item.downloadUrl.await().toString()
+                imageUrls.add(url)
+            }
+
+            return imageUrls
+        } catch (e: Exception) {
+            throw Exception("Error al obtener imágenes de noticias: ${e.message}")
         }
     }
 

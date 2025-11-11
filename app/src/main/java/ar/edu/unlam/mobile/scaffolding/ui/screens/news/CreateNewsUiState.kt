@@ -7,4 +7,5 @@ data class CreateNewsUiState(
     val selectedImageUri: Uri? = null,
     val isPublishing: Boolean = false,
     val publishSuccess: Boolean = false,
+    val error: String? = null,
 )
