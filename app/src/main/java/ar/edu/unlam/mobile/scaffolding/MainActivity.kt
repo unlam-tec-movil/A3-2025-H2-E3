@@ -158,6 +158,7 @@ fun MainScreen() {
             composable("editUser") {
                 EditProfileScreen(
                     modifier = Modifier.padding(paddingValue),
+                    navController = controller,
                 )
             }
             composable(

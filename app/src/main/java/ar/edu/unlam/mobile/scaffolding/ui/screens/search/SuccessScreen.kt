@@ -152,7 +152,7 @@ fun ListaResultados(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(listaFiltrada) { profesional ->
-            if (profesional.id !== UserId.ID) {
+            if (profesional.id != UserId.ID) {
                 CardProfessionalSearch(
                     P = profesional,
                     onItemClick = onProfessionalClick,

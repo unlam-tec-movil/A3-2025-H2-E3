@@ -8,4 +8,9 @@ interface ProfessionalsRepository {
     suspend fun getProfessionalById(id: String): Result<Professionals>
 
     suspend fun createProfessionals(professionals: Professionals): Result<Professionals>
+
+    suspend fun updateProfessional(
+        id: String,
+        professionals: Professionals,
+    ): Result<Professionals>
 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.components.KeyDetailsSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.components.ProfileInputField
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.components.ServicesSection
@@ -49,6 +50,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 fun EditProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: EditUserViewModel = hiltViewModel(),
+    navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -56,13 +58,6 @@ fun EditProfileScreen(
     when {
         uiState.isLoading -> {
             LoadingScreen()
-            return
-        }
-        uiState.error != null -> {
-            ErrorScreen(
-                error = uiState.error!!,
-                onRetry = { viewModel.refreshProfessional() },
-            )
             return
         }
     }
@@ -159,7 +154,7 @@ fun EditProfileScreen(
             HorizontalDivider()
 
             Text(
-                text = "User Data",
+                text = "Informacion de usuario",
                 style =
                     MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
@@ -170,21 +165,28 @@ fun EditProfileScreen(
             )
 
             ProfileInputField(
-                label = "Full Name",
+                label = "Img Url",
+                value = imgUrl,
+                onValueChange = { imgUrl = it },
+                modifier = Modifier.padding(bottom = 20.dp),
+            )
+
+            ProfileInputField(
+                label = "Nombre",
                 value = fullName,
                 onValueChange = { fullName = it },
                 modifier = Modifier.padding(bottom = 20.dp),
             )
 
             ProfileInputField(
-                label = "Profession",
+                label = "Profesion",
                 value = profession,
                 onValueChange = { profession = it },
                 modifier = Modifier.padding(bottom = 0.dp),
             )
 
             ProfileInputField(
-                label = "About Me",
+                label = "Acerca de mi",
                 value = aboutMe,
                 onValueChange = { aboutMe = it },
                 singleLine = false,
@@ -224,6 +226,7 @@ fun EditProfileScreen(
                         licenseNumber = licenseNumber,
                         services = services,
                     )
+                    navController.navigate("form")
                 },
                 modifier =
                     Modifier
@@ -238,7 +241,7 @@ fun EditProfileScreen(
                     ),
             ) {
                 Text(
-                    text = "Save Changes",
+                    text = "Guardar",
                     style =
                         MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Medium,
@@ -268,44 +271,6 @@ fun LoadingScreen() {
                 text = "Cargando datos...",
                 style = MaterialTheme.typography.bodyMedium,
             )
-        }
-    }
-}
-
-@Composable
-fun ErrorScreen(
-    error: String,
-    onRetry: () -> Unit,
-) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "Error al cargar los datos",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.error,
-        )
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 16.dp),
-        )
-        Button(
-            onClick = onRetry,
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                ),
-        ) {
-            Text("Reintentar")
         }
     }
 }

@@ -8,6 +8,7 @@ import ar.edu.unlam.mobile.scaffolding.domain.usecase.reviewsUseCase.CreateRevie
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.reviewsUseCase.GetReviewsUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsUseCase
+import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.UpdateProfessionalsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,4 +38,9 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideCreateReviewsUseCase(repository: ReviewsRepository): CreateReviewsUseCase = CreateReviewsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateProfessionalsUseCase(repository: ProfessionalsRepository): UpdateProfessionalsUseCase =
+        UpdateProfessionalsUseCase(repository)
 }

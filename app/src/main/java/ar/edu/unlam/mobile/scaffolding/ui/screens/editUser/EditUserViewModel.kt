@@ -3,6 +3,7 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.editUser
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.GetProfessionalsByIdUseCase
+import ar.edu.unlam.mobile.scaffolding.domain.usecase.userUseCase.UpdateProfessionalsUseCase
 import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ class EditUserViewModel
     @Inject
     constructor(
         private val getProfessionalsByIdUseCase: GetProfessionalsByIdUseCase,
+        private val updateProfessionalsUseCase: UpdateProfessionalsUseCase,
     ) : ViewModel() {
         private val _uiState = MutableStateFlow(EditUserUiState())
         val uiState: StateFlow<EditUserUiState> = _uiState.asStateFlow()
@@ -88,8 +90,6 @@ class EditUserViewModel
                 _uiState.update { it.copy(isSaving = true, error = null) }
 
                 try {
-                    // TODO: Implementar la lógica para guardar los cambios
-                    // Por ahora solo simulamos el guardado
                     println("DEBUG: Guardando cambios...")
                     println("DEBUG: Nombre: $fullName")
                     println("DEBUG: Profesión: $profession")
@@ -99,34 +99,57 @@ class EditUserViewModel
                     println("DEBUG: License: $licenseNumber")
                     println("DEBUG: Services: $services")
 
-                    // Simular tiempo de guardado
-                    kotlinx.coroutines.delay(1000)
+                    // Obtener el profesional actual y crear uno actualizado
+                    val currentProfessional = _uiState.value.professionals
+                    if (currentProfessional != null) {
+                        val updatedProfessional =
+                            currentProfessional.copy(
+                                name = fullName,
+                                profession = profession,
+                                aboutText = aboutMe,
+                                keyInfo =
+                                    mapOf(
+                                        "Zona de Cobertura" to location,
+                                        "años de experiencia" to experience,
+                                        "Matricula" to licenseNumber,
+                                    ),
+                                services = services,
+                            )
 
-                    _uiState.update {
-                        it.copy(
-                            isSaving = false,
-                            saveSuccess = true,
-                            // Actualizar el profesional localmente
-                            professionals =
-                                it.professionals?.copy(
-                                    name = fullName,
-                                    profession = profession,
-                                    aboutText = aboutMe,
-                                    keyInfo =
-                                        mapOf(
-                                            "Zona de Cobertura" to location,
-                                            "años de experiencia" to experience,
-                                            "Matricula" to licenseNumber,
-                                        ),
-                                    services = services,
-                                ),
+                        updateProfessionalsUseCase(UserId.ID, updatedProfessional).fold(
+                            onSuccess = { savedProfessional ->
+                                println("DEBUG: Profesional actualizado exitosamente")
+                                _uiState.update {
+                                    it.copy(
+                                        isSaving = false,
+                                        saveSuccess = true,
+                                        professionals = savedProfessional,
+                                    )
+                                }
+
+                                // Resetear el éxito después de un tiempo
+                                viewModelScope.launch {
+                                    kotlinx.coroutines.delay(3000)
+                                    _uiState.update { it.copy(saveSuccess = false) }
+                                }
+                            },
+                            onFailure = { error ->
+                                println("DEBUG: Error al guardar: $error")
+                                _uiState.update {
+                                    it.copy(
+                                        isSaving = false,
+                                        error = "Error al guardar cambios: ${error.message}",
+                                    )
+                                }
+                            },
                         )
-                    }
-
-                    // Resetear el éxito después de un tiempo
-                    viewModelScope.launch {
-                        kotlinx.coroutines.delay(3000)
-                        _uiState.update { it.copy(saveSuccess = false) }
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                isSaving = false,
+                                error = "No se pudo obtener los datos del profesional",
+                            )
+                        }
                     }
                 } catch (e: Exception) {
                     _uiState.update {
@@ -137,6 +160,7 @@ class EditUserViewModel
                     }
                 }
             }
+            refreshProfessional()
         }
 
         fun clearError() {
