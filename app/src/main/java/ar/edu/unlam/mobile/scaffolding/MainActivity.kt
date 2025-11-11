@@ -34,6 +34,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.EditProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.news.CreateNewsScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
@@ -147,6 +148,19 @@ fun MainScreen() {
                     modifier = Modifier.padding(paddingValue),
                     viewModel = hiltViewModel(backStackEntry),
                     navController = controller,
+                )
+            }
+
+            composable(
+                route = "createNews/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
+                CreateNewsScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    profileViewModel = hiltViewModel(backStackEntry),
+                    onBackClick = { controller.navigate("feed") },
                 )
             }
             composable("feed") {
