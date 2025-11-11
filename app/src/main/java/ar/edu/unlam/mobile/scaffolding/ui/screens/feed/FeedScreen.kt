@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -65,6 +66,7 @@ fun FeedScreen(
                     fontSize = 22.sp,
                 )
             }
+            HorizontalDivider()
 
             when {
                 uiState.isLoading -> {
@@ -116,6 +118,7 @@ fun FeedScreen(
                                 isLiked = news.isLiked,
                                 imgUrl = news.imgUrl.toString(),
                                 userImgUrl = news.userImgUrl.toString(),
+                                createdAt = news.createdAt,
                                 onProfessionalClick = { navController.navigate("professional/${news.userId}") },
                             )
                         }

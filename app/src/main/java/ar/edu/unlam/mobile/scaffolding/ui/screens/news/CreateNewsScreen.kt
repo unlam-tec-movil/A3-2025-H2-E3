@@ -67,7 +67,6 @@ fun CreateNewsScreen(
     LaunchedEffect(uiState.publishSuccess) {
         if (uiState.publishSuccess) {
             kotlinx.coroutines.delay(2000)
-            viewModel.resetForm()
             onPublishSuccess()
         }
     }
@@ -104,6 +103,10 @@ fun CreateNewsScreen(
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
+            uiState.error?.let { error ->
+                onPublishSuccess()
+            }
+
             // Mostrar éxito
             if (uiState.publishSuccess) {
                 SuccessMessage()

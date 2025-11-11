@@ -160,7 +160,11 @@ fun MainScreen() {
                 CreateNewsScreen(
                     modifier = Modifier.padding(paddingValue),
                     profileViewModel = hiltViewModel(backStackEntry),
-                    onBackClick = { controller.navigate("feed") },
+                    onPublishSuccess = {
+                        controller.navigate("feed") {
+                            popUpTo("createNews/{id}") { inclusive = true }
+                        }
+                    },
                 )
             }
             composable("feed") {
