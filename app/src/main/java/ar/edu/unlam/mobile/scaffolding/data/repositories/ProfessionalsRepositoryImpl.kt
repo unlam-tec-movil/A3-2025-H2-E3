@@ -2,6 +2,7 @@ package ar.edu.unlam.mobile.scaffolding.data.repositories
 
 import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.ProfessionalsApi
 import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.dto.ProfessionalsDto
+import ar.edu.unlam.mobile.scaffolding.data.datasources.network.professionals.dto.UpdateProfessionalsRequest
 import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.domain.repository.ProfessionalsRepository
 import javax.inject.Inject
@@ -43,6 +44,41 @@ class ProfessionalsRepositoryImpl
                 Result.failure(e)
             }
 
+        override suspend fun updateProfessional(
+            id: String,
+            professional: Professionals,
+        ): Result<Professionals> =
+            try {
+                val updateRequest =
+                    UpdateProfessionalsRequest(
+                        aboutText = professional.aboutText,
+                        imgUrl = professional.imgUrl,
+                        name = professional.name,
+                        profession = professional.profession,
+                        rating = professional.rating,
+                        location = professional.location,
+                        keyInfo = professional.keyInfo,
+                        services = professional.services,
+                        isProfileHV = professional.isProfileHV,
+                        isProfessional = professional.isProfessional,
+                    )
+
+                val response = professionalsApi.updateProfessional(id, updateRequest)
+                if (response.isSuccessful) {
+                    val updatedProfessionalDto = response.body()
+                    if (updatedProfessionalDto != null) {
+                        val updatedProfessional = updatedProfessionalDto.toDomain()
+                        Result.success(updatedProfessional)
+                    } else {
+                        Result.failure(Exception("No se pudo actualizar el profesional"))
+                    }
+                } else {
+                    Result.failure(Exception("Error: ${response.code()} - ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+
         override suspend fun createProfessionals(professionals: Professionals): Result<Professionals> =
             Result.failure(Exception("Método no implementado"))
     }
@@ -60,4 +96,6 @@ private fun ProfessionalsDto.toDomain(): Professionals =
         location = this.location,
         keyInfo = this.keyInfo,
         services = this.services,
+        isProfileHV = this.isProfileHV,
+        isProfessional = this.isProfessional ?: false,
     )

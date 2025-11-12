@@ -12,4 +12,6 @@ data class CreateProfessionalsRequest(
     @SerializedName("location") val location: List<Double>,
     @SerializedName("keyInfo") val keyInfo: Map<String, String>,
     @SerializedName("services") val services: List<String>,
+    @SerializedName("isProfileHV") val isProfileHV: Boolean,
+    @SerializedName("isProfessional") val isProfessional: Boolean,
 )

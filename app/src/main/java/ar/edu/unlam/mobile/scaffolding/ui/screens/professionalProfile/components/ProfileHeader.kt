@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -30,6 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.getOficioIcon
+import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
 import coil3.compose.AsyncImage
 
 @Composable
@@ -38,10 +42,10 @@ fun ProfileHeader(
     name: String,
     profession: String,
     rating: Double,
-    isMyProfile: Boolean = false,
+    isProfileHV: Boolean = false,
     imgUrl: String,
 ) {
-    if (isMyProfile) {
+    if (isProfileHV) {
         Column(
             modifier =
                 modifier
@@ -50,8 +54,8 @@ fun ProfileHeader(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ImageProfile(imgUrl = imgUrl, isMyProfile = isMyProfile)
-            InfoProfile(name, profession, rating, isMyProfile)
+            ImageProfile(imgUrl = imgUrl, isMyProfile = isProfileHV)
+            InfoProfile(name, profession, rating, isProfileHV)
         }
     } else {
         Row(
@@ -62,8 +66,8 @@ fun ProfileHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
         ) {
-            ImageProfile(imgUrl = imgUrl, isMyProfile = isMyProfile)
-            InfoProfile(name, profession, rating, isMyProfile)
+            ImageProfile(imgUrl = imgUrl, isMyProfile = isProfileHV)
+            InfoProfile(name, profession, rating, isProfileHV)
         }
     }
 }
@@ -98,7 +102,7 @@ fun ImageProfile(
     Box(
         modifier =
             Modifier
-                .size(if (isMyProfile) 150.dp else 90.dp)
+                .size(if (isMyProfile) 150.dp else 110.dp)
                 .background(MaterialTheme.colorScheme.surface, CircleShape)
                 .clip(CircleShape),
         contentAlignment = Alignment.Center,
@@ -190,6 +194,7 @@ fun InfoProfile(
         // Rating y reseñas
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // Estrellas
             Row {
@@ -208,6 +213,19 @@ fun InfoProfile(
                         modifier = Modifier.size(20.dp),
                     )
                 }
+            }
+
+            if (profession.isNotEmpty() && !isMyProfile) {
+                Spacer(Modifier.width(20.dp))
+                Icon(
+                    imageVector = getOficioIcon(profession),
+                    contentDescription = null,
+                    tint = LightPrimary,
+                    modifier =
+                        Modifier
+                            .size(32.dp)
+                            .padding(horizontal = 2.dp),
+                )
             }
         }
     }

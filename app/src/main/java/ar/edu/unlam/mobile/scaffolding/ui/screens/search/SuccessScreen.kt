@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
+import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CardProfessionalSearch
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CategoryFilterSection
@@ -151,10 +152,12 @@ fun ListaResultados(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(listaFiltrada) { profesional ->
-            CardProfessionalSearch(
-                P = profesional,
-                onItemClick = onProfessionalClick,
-            )
+            if (profesional.id != UserId.ID) {
+                CardProfessionalSearch(
+                    P = profesional,
+                    onItemClick = onProfessionalClick,
+                )
+            }
         }
         item {
             Spacer(modifier = Modifier.height(10.dp))

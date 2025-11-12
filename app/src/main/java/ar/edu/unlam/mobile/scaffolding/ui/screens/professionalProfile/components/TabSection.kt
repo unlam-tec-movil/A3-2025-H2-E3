@@ -18,6 +18,7 @@ fun TabSection(
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit,
     isMyProfile: Boolean = false,
+    reloadReview: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     TabRow(
@@ -50,18 +51,34 @@ fun TabSection(
                     )
                 }
             } else {
-                Tab(
-                    text = {
-                        Text(
-                            text = tab.title,
-                            color = if (selectedTab == tab) LightPrimary else Color.Gray,
-                        )
-                    },
-                    selected = selectedTab == tab,
-                    onClick = {
-                        onTabSelected(tab)
-                    },
-                )
+                if (tab == ProfileTab.REVIEW) {
+                    Tab(
+                        text = {
+                            Text(
+                                text = tab.title,
+                                color = if (selectedTab == tab) LightPrimary else Color.Gray,
+                            )
+                        },
+                        selected = selectedTab == tab,
+                        onClick = {
+                            onTabSelected(tab)
+                            reloadReview()
+                        },
+                    )
+                } else {
+                    Tab(
+                        text = {
+                            Text(
+                                text = tab.title,
+                                color = if (selectedTab == tab) LightPrimary else Color.Gray,
+                            )
+                        },
+                        selected = selectedTab == tab,
+                        onClick = {
+                            onTabSelected(tab)
+                        },
+                    )
+                }
             }
         }
     }
