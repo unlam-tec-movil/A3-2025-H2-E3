@@ -1,38 +1,50 @@
 package ar.edu.unlam.mobile.scaffolding.ui.components
 
+import android.R
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
-import com.mapbox.common.MapboxOptions.accessToken
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapInitOptions
 import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.MapsResourceOptions
-import com.mapbox.maps.Style
-import com.mapbox.maps.dsl.cameraOptions
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.style.style
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
+import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 
 @SuppressLint("RestrictedApi")
 @Composable
 fun MapboxScreen(modifier: Modifier = Modifier) {
-    // 1. Define el estado de la cámara (dónde centrar y qué zoom usar)
+    val pinIcon =
+        rememberIconImage(
+            key = "red-marker",
+            painter = painterResource(id = R.drawable.star_big_off), // your pin drawable
+        )
+    val puntoA = Point.fromLngLat(-58.3816, -34.6037)
+    val view = LocalView.current
+
+    val puntoB = Point.fromLngLat(-58.4500, -34.6500)
+
     val mapViewportState =
         rememberMapViewportState {
             setCameraOptions {
-                // Centrar cerca de Buenos Aires (ejemplo)
-                center(Point.fromLngLat(-58.3816, -34.6037))
-                zoom(10.0) // Nivel de zoom intermedio
+                center(puntoA)
+                zoom(10.0)
             }
         }
 
-    // 2. Usa el MapboxMap Composable
     MapboxMap(
         modifier = modifier.fillMaxSize(),
         mapViewportState = mapViewportState,
-    )
+    ) {
+        PointAnnotation(point = puntoA) { iconImage = pinIcon } // Point 1
+        PointAnnotation(point = puntoB) { iconImage = pinIcon } // Point 2
+    }
 }

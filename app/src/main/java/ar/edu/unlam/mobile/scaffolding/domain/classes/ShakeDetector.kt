@@ -14,7 +14,7 @@ class ShakeDetector(
     private val onShake: () -> Unit,
 ) : SensorEventListener {
     @Suppress("ktlint:standard:property-naming")
-    private val SHAKE_THRESHOLD_GRAVITY = 1.1F
+    private val SHAKE_THRESHOLD_GRAVITY = 3.9F
 
     @Suppress("ktlint:standard:property-naming")
     private val SHAKE_SLOP_TIME_MS = 500

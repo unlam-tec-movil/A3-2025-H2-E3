@@ -112,7 +112,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
 
     // SDK principal de Mapbox
-    implementation("com.mapbox.maps:android-ndk27:11.16.2")
+    implementation("com.mapbox.maps:android:11.16.2")
 
     implementation("com.mapbox.extension:maps-compose:11.16.2")
 }
