@@ -7,10 +7,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +27,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,7 +55,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.Profession
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.activity.compose.rememberLauncherForActivityResult
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -75,12 +84,12 @@ fun MainScreen() {
     val context = LocalContext.current
     val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
     )
 
     var hasLocationPermission by remember {
         mutableStateOf(
-            locationPermissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+            locationPermissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED },
         )
     }
 
@@ -88,7 +97,7 @@ fun MainScreen() {
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
             hasLocationPermission = permissions.values.reduce { acc, isGranted -> acc && isGranted }
-        }
+        },
     )
 
     if (hasLocationPermission) {
@@ -103,19 +112,21 @@ fun PermissionRequestScreen(onPermissionRequested: () -> Unit) {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "Permiso de Ubicación Requerido",
             style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Esta aplicación necesita acceso a tu ubicación para notificarte cuando estés cerca de un profesional.",
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onPermissionRequested) {
@@ -125,13 +136,13 @@ fun PermissionRequestScreen(onPermissionRequested: () -> Unit) {
         TextButton(onClick = {
             val intent = Intent(
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", context.packageName, null)
+                Uri.fromParts("package", context.packageName, null),
             )
             context.startActivity(intent)
         }) {
             Text(
                 text = "Si el diálogo no aparece, pulsa aquí para ir a los ajustes y activarlo manualmente.",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
