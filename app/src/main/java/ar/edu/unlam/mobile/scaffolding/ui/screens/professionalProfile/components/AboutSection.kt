@@ -2,6 +2,7 @@ package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -122,12 +124,26 @@ private fun KeyValueRow(
 
 @Composable
 private fun ServiceChip(service: String) {
+    val backgroundColor =
+        if (isSystemInDarkTheme()) {
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
+
+    val textColor =
+        if (isSystemInDarkTheme()) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            LightPrimary
+        }
+
     Box(
         modifier =
             Modifier
                 .shadow(1.dp, RoundedCornerShape(16.dp), false, LightPrimary)
                 .background(
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    color = backgroundColor,
                     shape = RoundedCornerShape(16.dp),
                 ).border(
                     width = 1.dp,
@@ -138,7 +154,7 @@ private fun ServiceChip(service: String) {
         Text(
             text = service,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = textColor,
         )
     }
 }
