@@ -32,7 +32,6 @@ class ShakeDetector(
         val y = event.values[1]
         val z = event.values[2]
 
-
         val gForce = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat() / SensorManager.GRAVITY_EARTH
 
         if (gForce > SHAKE_THRESHOLD_GRAVITY) {
@@ -59,7 +58,7 @@ fun ShakeDetectorComposable(onShake: () -> Unit) {
 
     // Ciclo de Vida con DisposableEffect
     DisposableEffect(sensorManager, accelerometer) {
-        //Se ejecuta cuando el Composable entra en la composición (se muestra)
+        // Se ejecuta cuando el Composable entra en la composición (se muestra)
         sensorManager.registerListener(
             detector,
             accelerometer,

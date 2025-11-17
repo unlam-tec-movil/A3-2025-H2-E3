@@ -20,17 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomBar(controller: NavHostController) {
-
     val navBackStackEntry by controller.currentBackStackEntryAsState()
     NavigationBar(modifier = Modifier.height(70.dp).padding(0.dp)) {
-
-        //boton de feed
+        // boton de feed
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "feed" } == true,
             onClick = { controller.navigate("feed") },
@@ -43,7 +41,7 @@ fun BottomBar(controller: NavHostController) {
                 )
             },
         )
-        //boton de busqueda
+        // boton de busqueda
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "home" } == true,
             onClick = { controller.navigate("home") },
@@ -56,10 +54,10 @@ fun BottomBar(controller: NavHostController) {
                 )
             },
         )
-        //boton de mapa
+        // boton de mapa
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.route == "map",
-            onClick = { controller.navigate("map")},
+            onClick = { controller.navigate("map") },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Map,
@@ -67,9 +65,9 @@ fun BottomBar(controller: NavHostController) {
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(10.dp),
                 )
-            }
+            },
         )
-        //boton de perfil
+        // boton de perfil
         NavigationBarItem(
             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "form" } == true,
             onClick = { controller.navigate("form") },

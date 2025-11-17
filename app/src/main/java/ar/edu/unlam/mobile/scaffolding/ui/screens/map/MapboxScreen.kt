@@ -13,7 +13,6 @@ import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportS
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 
-
 @SuppressLint("RestrictedApi")
 @Composable
 fun MapboxScreen(modifier: Modifier = Modifier) {
