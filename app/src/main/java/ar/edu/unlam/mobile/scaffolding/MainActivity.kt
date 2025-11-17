@@ -229,7 +229,7 @@ fun MainScreen() {
             }
 
             composable(route = "map") {
-                MapboxScreen()
+                MapboxScreen(modifier = Modifier.padding(paddingValue))
             }
         }
     }
