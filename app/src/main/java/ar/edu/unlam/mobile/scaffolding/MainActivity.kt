@@ -27,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.unlam.mobile.scaffolding.domain.classes.ShakeDetectorComposable
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
@@ -34,17 +35,20 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.EditProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.map.MapboxScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.news.CreateNewsScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
+import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
-
+const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFja3U5NSIsImEiOiJjbWhucDNsNW0wMnp1Mmtwemg1dGNyb2Z1In0.dGrMielTiHaXoWTd38nYUQ"
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapboxOptions.accessToken = MAPBOX_ACCESS_TOKEN
         setContent {
             ScaffoldingV2Theme {
                 // A surface container using the 'background' color from the theme
@@ -78,6 +82,15 @@ fun MainScreen() {
             .value
             ?.destination
             ?.route
+    @Suppress("ktlint:standard:property-naming")
+    val MAPA_ROUTE: String = "map"
+    ShakeDetectorComposable(
+        onShake = {
+            controller.navigate(MAPA_ROUTE) {
+                launchSingleTop = true
+            }
+        },
+    )
 
     Scaffold(
         bottomBar = {
@@ -85,13 +98,7 @@ fun MainScreen() {
                 BottomBar(controller = controller)
             }
         },
-        /*
-         * floatingActionButton = {
-            IconButton(onClick = { controller.navigate("home") }) {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            }
-        },
-         * */
+
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
                 // custom snackbar with the custom action button color and border
@@ -217,6 +224,10 @@ fun MainScreen() {
             ) { navBackStackEntry ->
                 val id = navBackStackEntry.arguments?.getString("id") ?: "1"
                 UserScreen(userId = id, modifier = Modifier.padding(paddingValue))
+            }
+
+            composable(route = "map") {
+                MapboxScreen()
             }
         }
     }

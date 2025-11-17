@@ -6,48 +6,76 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.RssFeed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomBar(controller: NavHostController) {
+
+    val navBackStackEntry by controller.currentBackStackEntryAsState()
     NavigationBar(modifier = Modifier.height(70.dp).padding(0.dp)) {
+
+        //boton de feed
         NavigationBarItem(
-            selected = false, // Siempre false
+            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "feed" } == true,
+            onClick = { controller.navigate("feed") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Newspaper,
+                    contentDescription = "feed",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.height(45.dp).padding(0.dp),
+                )
+            },
+        )
+        //boton de busqueda
+        NavigationBarItem(
+            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "home" } == true,
             onClick = { controller.navigate("home") },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Home,
+                    imageVector = Icons.Default.Search,
                     contentDescription = "Home",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(0.dp),
                 )
             },
         )
+        //boton de mapa
         NavigationBarItem(
-            selected = false, // Siempre false
-            onClick = { controller.navigate("feed") },
+            selected = navBackStackEntry?.destination?.route == "map",
+            onClick = { controller.navigate("map")},
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "User",
+                    imageVector = Icons.Outlined.Map,
+                    contentDescription = "map",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.height(45.dp).padding(0.dp),
+                    modifier = Modifier.height(45.dp).padding(10.dp),
                 )
-            },
+            }
         )
+        //boton de perfil
         NavigationBarItem(
-            selected = false, // Siempre false
+            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "form" } == true,
             onClick = { controller.navigate("form") },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.CheckCircle,
+                    imageVector = Icons.Outlined.PersonOutline,
                     contentDescription = "User",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.height(45.dp).padding(0.dp),

@@ -115,4 +115,7 @@ dependencies {
 
     // Firebase Storage
     implementation("com.google.firebase:firebase-storage-ktx")
+    // SDK principal de Mapbox
+    implementation("com.mapbox.maps:android:11.16.2")
+    implementation("com.mapbox.extension:maps-compose:11.16.2")
 }
