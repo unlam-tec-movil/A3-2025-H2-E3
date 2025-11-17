@@ -43,7 +43,9 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
+
 const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFja3U5NSIsImEiOiJjbWhucDNsNW0wMnp1Mmtwemg1dGNyb2Z1In0.dGrMielTiHaXoWTd38nYUQ"
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,7 @@ fun MainScreen() {
             .value
             ?.destination
             ?.route
+
     @Suppress("ktlint:standard:property-naming")
     val MAPA_ROUTE: String = "map"
     ShakeDetectorComposable(
@@ -98,7 +101,6 @@ fun MainScreen() {
                 BottomBar(controller = controller)
             }
         },
-
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
                 // custom snackbar with the custom action button color and border
@@ -227,7 +229,7 @@ fun MainScreen() {
             }
 
             composable(route = "map") {
-                MapboxScreen()
+                MapboxScreen(modifier = Modifier.padding(paddingValue))
             }
         }
     }
