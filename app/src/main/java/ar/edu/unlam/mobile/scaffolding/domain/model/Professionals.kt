@@ -11,7 +11,9 @@ data class Professionals(
     val name: String,
     val profession: String,
     val rating: Double,
-    val location: List<Double>,
+    val location: List<String>,
     val keyInfo: Map<String, String>,
     val services: List<String>,
+    val isProfileHV: Boolean,
+    val isProfessional: Boolean,
 )
