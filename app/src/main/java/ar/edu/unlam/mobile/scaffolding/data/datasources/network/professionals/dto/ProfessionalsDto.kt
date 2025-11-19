@@ -13,7 +13,7 @@ data class ProfessionalsDto(
     @SerializedName("name") val name: String,
     @SerializedName("profession") val profession: String,
     @SerializedName("rating") val rating: Double,
-    @SerializedName("location") val location: List<Double>,
+    @SerializedName("location") val location: List<String>,
     @SerializedName("keyInfo") val keyInfo: Map<String, String>,
     @SerializedName("services") val services: List<String>,
 )

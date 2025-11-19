@@ -79,6 +79,10 @@ class ProfessionalsRepositoryImpl
                 Result.failure(e)
             }
 
+        override suspend fun getProfessionalLocations(): Result<List<String>> {
+            TODO("Not yet implemented")
+        }
+
         override suspend fun createProfessionals(professionals: Professionals): Result<Professionals> =
             Result.failure(Exception("Método no implementado"))
     }

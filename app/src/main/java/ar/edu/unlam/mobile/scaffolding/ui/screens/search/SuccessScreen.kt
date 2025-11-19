@@ -41,7 +41,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessScreen(
-    vm: HomeViewModel,
     navController: NavController,
     viewModel: SuccessViewModel = hiltViewModel(),
 ) {

@@ -10,36 +10,74 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
+import ar.edu.unlam.mobile.scaffolding.ui.screens.search.SuccessViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.rememberIconImage
+import com.mapbox.maps.extension.compose.style.layers.ImageValue
+import com.mapbox.maps.extension.compose.style.rememberStyleImage
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun MapboxScreen(modifier: Modifier = Modifier) {
+fun MapboxScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SuccessViewModel = hiltViewModel(),
+    profesionalId: String? = null,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     val pinIcon =
         rememberIconImage(
-            key = "red-marker",
-            painter = painterResource(id = R.drawable.star_big_off), // your pin drawable
+            key = "pin",
+            painter = painterResource(id = android.R.drawable.star_on),
         )
-    val puntoA = Point.fromLngLat(-58.3816, -34.6037)
-    val view = LocalView.current
 
-    val puntoB = Point.fromLngLat(-58.4500, -34.6500)
+    val ubicacion =
+        rememberIconImage(
+            key = "marker",
+            painter = painterResource(id = android.R.drawable.radiobutton_on_background),
+        )
+
+    val puntoA = Point.fromLngLat(-58.4355, -34.6065)
+
+    var textoMapa: String = "Profesionales Cercanos"
+    val listaLocaciones = uiState.professionals
+    var listafiltrada: List<Professionals>
+
+    if (profesionalId != null) {
+        listafiltrada = listaLocaciones.filter { it.id == profesionalId }
+
+        textoMapa = "Ubicacion del Profesional"
+    } else {
+        listafiltrada = listaLocaciones
+    }
 
     val mapViewportState =
         rememberMapViewportState {
@@ -66,7 +104,7 @@ fun MapboxScreen(modifier: Modifier = Modifier) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                text = "Mapa",
+                text = textoMapa,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp,
@@ -78,8 +116,20 @@ fun MapboxScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth().fillMaxHeight(),
             mapViewportState = mapViewportState,
         ) {
-            PointAnnotation(point = puntoA) { iconImage = pinIcon } // Point 1
-            PointAnnotation(point = puntoB) { iconImage = pinIcon } // Point 2
+            PointAnnotation(point = puntoA) { iconImage = ubicacion } // Point 1
+            listafiltrada.forEach { professionals ->
+                val latStr = professionals.location.getOrNull(1)
+                val lonStr = professionals.location.getOrNull(0)
+
+                var lat: Double? = latStr!!.toDouble()
+                var lon: Double? = lonStr!!.toDouble()
+
+                val locacion = Point.fromLngLat(lon!!, lat!!)
+
+                PointAnnotation(point = locacion) {
+                    iconImage = pinIcon
+                }
+            }
         }
     }
 }

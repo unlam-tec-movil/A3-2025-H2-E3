@@ -20,9 +20,9 @@ class SuccessViewModel
         private val _uiState = MutableStateFlow(SearchUiState())
         val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-        init {
-            loadProfessional()
-        }
+            init {
+                    loadProfessional()
+                }
 
         fun loadProfessional() {
             viewModelScope.launch {
