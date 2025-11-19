@@ -13,4 +13,6 @@ interface ProfessionalsRepository {
         id: String,
         professionals: Professionals,
     ): Result<Professionals>
+
+    suspend fun getProfessionalLocations(): Result<List<String>>
 }

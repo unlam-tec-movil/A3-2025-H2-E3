@@ -33,7 +33,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
-import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeViewModel
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CardProfessionalSearch
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CategoryFilterSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
@@ -41,7 +40,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessScreen(
-    vm: HomeViewModel,
     navController: NavController,
     viewModel: SuccessViewModel = hiltViewModel(),
 ) {

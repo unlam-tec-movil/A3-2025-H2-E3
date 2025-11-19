@@ -47,7 +47,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 @Composable
 fun ProfessionalProfileScreen(
     onBackClick: () -> Unit = {},
-    onHowToGetThere: () -> Unit = {},
+    onHowToGetThere: (String) -> Unit,
     onCall: () -> Unit = {},
     onWhatsApp: () -> Unit = {},
     onRegisterWork: () -> Unit = {},
@@ -141,8 +141,9 @@ fun ProfessionalProfileScreen(
                             )
 
                             // Botones de acción
+                            val id = uiState.professionals?.id ?: ""
                             ActionButtons(
-                                onHowToGetThere = onHowToGetThere,
+                                onHowToGetThere = { onHowToGetThere(id) },
                                 onCall = onCall,
                                 onWhatsApp = onWhatsApp,
                                 onRegisterWork = onRegisterWork,
