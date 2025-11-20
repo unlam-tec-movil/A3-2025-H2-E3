@@ -43,11 +43,12 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ReviewSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.TabSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery.GallerySection
+import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery.ImageModal
 
 @Composable
 fun ProfessionalProfileScreen(
     onBackClick: () -> Unit = {},
-    onHowToGetThere: (String) -> Unit,
+    onHowToGetThere: () -> Unit = {},
     onCall: () -> Unit = {},
     onWhatsApp: () -> Unit = {},
     onRegisterWork: () -> Unit = {},
@@ -57,6 +58,10 @@ fun ProfessionalProfileScreen(
 ) {
     // Estado para la pestaña seleccionada
     var selectedTab by remember { mutableStateOf(ProfileTab.ABOUT) }
+
+    // Estados para el modal de imagen
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+    var isImageModalVisible by remember { mutableStateOf(false) }
 
     val uiState by viewModel.uiState.collectAsState()
     val uiStateReview by viewModel.uiStateReview.collectAsState()
@@ -141,9 +146,8 @@ fun ProfessionalProfileScreen(
                             )
 
                             // Botones de acción
-                            val id = uiState.professionals?.id ?: ""
                             ActionButtons(
-                                onHowToGetThere = { onHowToGetThere(id) },
+                                onHowToGetThere = onHowToGetThere,
                                 onCall = onCall,
                                 onWhatsApp = onWhatsApp,
                                 onRegisterWork = onRegisterWork,
@@ -176,7 +180,13 @@ fun ProfessionalProfileScreen(
 
                             ProfileTab.GALLERY -> {
                                 items(1) {
-                                    GallerySection(userIdGalery = uiState.professionals?.id ?: "")
+                                    GallerySection(
+                                        userIdGalery = uiState.professionals?.id ?: "",
+                                        onImageClick = { imageUrl ->
+                                            selectedImageUrl = imageUrl
+                                            isImageModalVisible = true
+                                        },
+                                    )
                                 }
                             }
 
@@ -229,5 +239,15 @@ fun ProfessionalProfileScreen(
                 )
             }
         }
+
+        ImageModal(
+            imageUrl = selectedImageUrl ?: "",
+            isVisible = isImageModalVisible,
+            onDismiss = {
+                isImageModalVisible = false
+                selectedImageUrl = null
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

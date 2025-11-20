@@ -48,6 +48,7 @@ fun GallerySection(
     modifier: Modifier = Modifier,
     isProfileHV: Boolean = false,
     userIdGalery: String = "",
+    onImageClick: (String) -> Unit = {}, // Nuevo parámetro para manejar el click
 ) {
     val context = LocalContext.current
     val storageRepository = remember { StorageRepository() }
@@ -198,6 +199,9 @@ fun GallerySection(
                             } else {
                                 null
                             },
+                        onImageClick = {
+                            onImageClick(imageUrl) // Pasar el click al padre
+                        },
                     )
                 }
             }
@@ -234,7 +238,10 @@ fun GallerySection(
                             imageUrl = item,
                             modifier = Modifier.weight(1f),
                             isProfileHV = isProfileHV,
-                            onDeleteClick = null, // No mostrar botón de eliminar en perfiles ajenos
+                            onDeleteClick = null,
+                            onImageClick = {
+                                onImageClick(item) // Pasar el click al padre
+                            },
                         )
                     }
 
