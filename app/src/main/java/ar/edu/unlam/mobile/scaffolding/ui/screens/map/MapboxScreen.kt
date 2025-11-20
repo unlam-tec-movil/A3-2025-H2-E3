@@ -42,21 +42,26 @@ fun MapboxScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    // variable que define el icono grafico que se va a renderizar sobre el mapa
     val pinIcon =
         rememberIconImage(
             key = "pin",
             painter = painterResource(id = android.R.drawable.star_on),
         )
-
+    // variable que define el icono grafico que se va a renderizar sobre el mapa
     val ubicacion =
         rememberIconImage(
             key = "marker",
             painter = painterResource(id = android.R.drawable.radiobutton_on_background),
         )
 
+    // variable que define el punto inicial del mapa
     val puntoA = Point.fromLngLat(-58.4355, -34.6065)
 
+    // variable que define el titulo del mapa
     var textoMapa: String = "Profesionales Cercanos"
+
+    // variable lista<Professionals> que define la lista de profesionales
     val listaLocaciones = uiState.professionals
     var listafiltrada: List<Professionals>
 
@@ -68,6 +73,7 @@ fun MapboxScreen(
         listafiltrada = listaLocaciones
     }
 
+    // variable que define el estado del mapa
     val mapViewportState =
         rememberMapViewportState {
             setCameraOptions {
@@ -101,13 +107,22 @@ fun MapboxScreen(
         }
         HorizontalDivider()
 
+        // scope que define el mapa
         MapboxMap(
             modifier = Modifier.fillMaxWidth().fillMaxHeight(),
             mapViewportState = mapViewportState,
         ) {
-            PointAnnotation(point = puntoA) { iconImage = ubicacion } // Point 1
+            // los pointAnnotation son bloques que definen puntos en el mapa
+            // en los parametros se recibe un punto geografico, en las llaves el icono
+            PointAnnotation(point = puntoA) { iconImage = ubicacion }
+
+            // en este bloque se definen una lista de professionals, se capturan los datos de localizacion
             listafiltrada.forEach { professionals ->
+
+                // variable de latitud obtenida del string de double que recibe desde la base de datos
+
                 val latStr = professionals.location.getOrNull(1)
+                // variable de longitud obtenida del string de double que recibe desde la base de datos
                 val lonStr = professionals.location.getOrNull(0)
 
                 var lat: Double? = latStr!!.toDouble()
@@ -115,6 +130,8 @@ fun MapboxScreen(
 
                 val locacion = Point.fromLngLat(lon!!, lat!!)
 
+                // bloque de pointannotation que reitera sobre la lista de profesionales
+                // en los parametros se recibe un punto geografico, en las llaves el icono
                 PointAnnotation(point = locacion) {
                     iconImage = pinIcon
                 }
