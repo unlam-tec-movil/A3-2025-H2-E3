@@ -20,27 +20,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.unlam.mobile.scaffolding.domain.classes.ShakeDetectorComposable
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
 import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.EditProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.map.MapboxScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.news.CreateNewsScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
+import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
+
+const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFja3U5NSIsImEiOiJjbWhucDNsNW0wMnp1Mmtwemg1dGNyb2Z1In0.dGrMielTiHaXoWTd38nYUQ"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapboxOptions.accessToken = MAPBOX_ACCESS_TOKEN
         setContent {
             ScaffoldingV2Theme {
                 // A surface container using the 'background' color from the theme
@@ -75,19 +85,22 @@ fun MainScreen() {
             ?.destination
             ?.route
 
+    @Suppress("ktlint:standard:property-naming")
+    val MAPA_ROUTE: String = "map"
+    ShakeDetectorComposable(
+        onShake = {
+            controller.navigate(MAPA_ROUTE) {
+                launchSingleTop = true
+            }
+        },
+    )
+
     Scaffold(
         bottomBar = {
             if (currentRoute != "introduction") {
                 BottomBar(controller = controller)
             }
         },
-        /*
-         * floatingActionButton = {
-            IconButton(onClick = { controller.navigate("home") }) {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            }
-        },
-         * */
         snackbarHost = {
             SnackbarHost(snackBarHostState) { data ->
                 // custom snackbar with the custom action button color and border
@@ -125,7 +138,7 @@ fun MainScreen() {
     ) { paddingValue ->
         // NavHost es el componente que funciona como contenedor de los otros componentes que
         // podrán ser destinos de navegación.
-        NavHost(navController = controller, startDestination = "introduction") {
+        NavHost(navController = controller, startDestination = "feed") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("home") {
@@ -135,21 +148,59 @@ fun MainScreen() {
                 )
             }
             composable(
-                route = "professional/{dni}",
-                arguments = listOf(navArgument("dni") { type = NavType.IntType }),
-            ) { navBackStackEntry ->
-                val dni = navBackStackEntry.arguments?.getInt("dni") ?: 0
+                route = "professional/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
                 ProfessionalProfileScreen(
-                    dni = dni,
                     modifier = Modifier.padding(paddingValue),
+                    viewModel = hiltViewModel(backStackEntry),
+                    navController = controller,
+                )
+            }
+
+            composable(
+                route = "createNews/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
+                CreateNewsScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    profileViewModel = hiltViewModel(backStackEntry),
+                    onPublishSuccess = {
+                        controller.navigate("feed") {
+                            popUpTo("createNews/{id}") { inclusive = true }
+                        }
+                    },
                 )
             }
             composable("feed") {
                 FeedScreen(
                     modifier = Modifier.padding(paddingValue),
-                    onServiceRequest = {},
+                    navController = controller,
                 )
             }
+            composable("editUser") {
+                EditProfileScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    navController = controller,
+                )
+            }
+            composable(
+                route = "review/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+
+                ReviewScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    reviewViewModel = hiltViewModel(backStackEntry),
+                    navController = controller,
+                )
+            }
+
             composable("form") {
                 /*
                  * FormScreen(
@@ -157,7 +208,10 @@ fun MainScreen() {
                     snackbarHostState = snackBarHostState,
                 )
                  * */
-                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
+                ProfileScreen(
+                    modifier = Modifier.padding(paddingValue),
+                    navController = controller,
+                )
             }
             composable("introduction") {
                 IntroductionScreen(
@@ -172,6 +226,10 @@ fun MainScreen() {
             ) { navBackStackEntry ->
                 val id = navBackStackEntry.arguments?.getString("id") ?: "1"
                 UserScreen(userId = id, modifier = Modifier.padding(paddingValue))
+            }
+
+            composable(route = "map") {
+                MapboxScreen(modifier = Modifier.padding(paddingValue))
             }
         }
     }

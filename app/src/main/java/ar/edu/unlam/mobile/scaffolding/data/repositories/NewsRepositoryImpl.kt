@@ -39,14 +39,27 @@ class NewsRepositoryImpl
                         isLiked = news.isLiked,
                         likes = news.likes,
                     )
+
+                println("DEBUG: Enviando request: $request")
+
                 val response = newsApi.createNews(request)
+
                 if (response.isSuccessful) {
-                    val createdNews = response.body()?.toDomain() ?: news
-                    Result.success(createdNews)
+                    val createdNewsDto = response.body()
+                    if (createdNewsDto != null) {
+                        val createdNews = createdNewsDto.toDomain()
+                        println("DEBUG: Noticia creada con ID: ${createdNews.id}")
+                        Result.success(createdNews)
+                    } else {
+                        Result.failure(Exception("Respuesta vacía del servidor"))
+                    }
                 } else {
-                    Result.failure(Exception("Error creando noticia: ${response.code()}"))
+                    val errorBody = response.errorBody()?.string() ?: response.message()
+                    println("DEBUG: Error response: $errorBody")
+                    Result.failure(Exception("Error ${response.code()}: $errorBody"))
                 }
             } catch (e: Exception) {
+                println("DEBUG: Exception en repositorio: ${e.message}")
                 Result.failure(e)
             }
     }

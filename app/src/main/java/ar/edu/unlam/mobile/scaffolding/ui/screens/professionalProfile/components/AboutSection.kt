@@ -1,6 +1,7 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -126,14 +127,18 @@ private fun ServiceChip(service: String) {
             Modifier
                 .shadow(1.dp, RoundedCornerShape(16.dp), false, LightPrimary)
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(16.dp),
+                ).border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(16.dp),
                 ).padding(horizontal = 12.dp, vertical = 6.dp),
     ) {
         Text(
             text = service,
             fontSize = 12.sp,
-            color = LightPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
