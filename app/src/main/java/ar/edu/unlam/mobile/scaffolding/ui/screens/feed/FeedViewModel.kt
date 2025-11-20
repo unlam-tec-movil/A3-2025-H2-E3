@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,16 +42,26 @@ class FeedViewModel
                     .collect { location ->
                         professionalsRepository.getProfessionals().onSuccess {
                             it.forEach { professional ->
-                                val distance = FloatArray(1)
-                                Location.distanceBetween(
-                                    location.latitude,
-                                    location.longitude,
-                                    professional.location[0],
-                                    professional.location[1],
-                                    distance
-                                )
-                                if (distance[0] < 500) { // 500 meters threshold
-                                    vibratorManager.vibrate()
+                                if (professional.location.size >= 2) {
+                                    val lonStr = professional.location[0]
+                                    val latStr = professional.location[1]
+
+                                    val lon = lonStr.toDoubleOrNull()
+                                    val lat = latStr.toDoubleOrNull()
+
+                                    if (lon != null && lat != null) {
+                                        val distance = FloatArray(1)
+                                        Location.distanceBetween(
+                                            location.latitude,
+                                            location.longitude,
+                                            lat, // endLatitude
+                                            lon, // endLongitude
+                                            distance,
+                                        )
+                                        if (distance[0] < 500) { // 500 meters threshold
+                                            vibratorManager.vibrate()
+                                        }
+                                    }
                                 }
                             }
                         }
