@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -300,7 +301,6 @@ fun AppContent() {
                     modifier = Modifier.padding(paddingValue),
                     navController = controller,
                 )
-                ProfileScreen(45755878, modifier = Modifier.padding(paddingValue))
             }
             composable("introduction") {
                 IntroductionScreen(
@@ -319,14 +319,7 @@ fun AppContent() {
 
             composable(
                 route = "map?id={profesionalId}",
-                arguments =
-                    listOf(
-                        navArgument("profesionalId") {
-                            type = NavType.StringType
-                            defaultValue = null
-                            nullable = true
-                        },
-                    ),
+                arguments = listOf(navArgument("profesionalId") { type = NavType.StringType; defaultValue = null; nullable = true }),
             ) { backStackEntry ->
                 val idRecibido = backStackEntry.arguments?.getString("profesionalId")
 
