@@ -130,7 +130,7 @@ fun ProfileScreen(
                                 name = uiState.professionals?.name ?: "",
                                 profession = uiState.professionals?.profession ?: "",
                                 rating = uiState.professionals?.rating ?: 1.0,
-                                isProfileHV = true,
+                                isProfileHV = false,
                                 imgUrl = uiState.professionals?.imgUrl ?: "",
                             )
 

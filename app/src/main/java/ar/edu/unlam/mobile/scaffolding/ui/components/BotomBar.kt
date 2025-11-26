@@ -31,8 +31,8 @@ fun BottomBar(controller: NavHostController) {
         )
         // boton de busqueda
         NavigationBarItem(
-            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "home" } == true,
-            onClick = { controller.navigate("home") },
+            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == "successScreen" } == true,
+            onClick = { controller.navigate("successScreen") },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Search,

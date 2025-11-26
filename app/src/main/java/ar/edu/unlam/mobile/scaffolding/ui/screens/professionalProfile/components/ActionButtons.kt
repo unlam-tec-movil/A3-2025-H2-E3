@@ -12,7 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Directions
-import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Reviews
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -187,13 +187,13 @@ fun ActionButtons(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
-                        imageVector = Icons.Default.PhotoCamera,
-                        contentDescription = "Registrar trabajo",
+                        imageVector = Icons.Default.Reviews,
+                        contentDescription = "Calificar",
                         modifier = Modifier.size(25.dp),
                         tint = MaterialTheme.colorScheme.primary, // Cambiado aquí
                     )
                     Text(
-                        "Registrar trabajo",
+                        "Calificar",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,

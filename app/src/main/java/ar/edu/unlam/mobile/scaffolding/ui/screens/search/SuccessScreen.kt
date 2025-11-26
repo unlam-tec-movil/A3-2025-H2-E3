@@ -18,6 +18,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
-import ar.edu.unlam.mobile.scaffolding.ui.components.UserId
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CardProfessionalSearch
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.CategoryFilterSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
@@ -40,14 +40,23 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.search.components.SearchBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessScreen(
+    modifier: Modifier,
     navController: NavController,
     viewModel: SuccessViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
-    Column {
+    // Sincronizar la query del ViewModel con el estado local
+    LaunchedEffect(query) {
+        viewModel.setSearchQuery(query)
+    }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
         Row(
             modifier =
                 Modifier
@@ -75,7 +84,14 @@ fun SuccessScreen(
                 active = active,
                 onActiveChange = { active = it },
             )
-            CategoryFilterSection()
+
+            // Pasar el ViewModel al CategoryFilterSection
+            CategoryFilterSection(
+                selectedCategory = selectedCategory,
+                onCategorySelected = { category ->
+                    viewModel.setCategoryFilter(category)
+                },
+            )
 
             when {
                 uiState.isLoading -> {
@@ -113,9 +129,9 @@ fun SuccessScreen(
                 }
 
                 else -> {
+                    // Usar filteredProfessionals en lugar de filtrar manualmente
                     ListaResultados(
-                        profesionales = uiState.professionals,
-                        parametroBusqueda = query,
+                        profesionales = uiState.filteredProfessionals,
                         onProfessionalClick = { profesional ->
                             navController.navigate("professional/${profesional.id}")
                         },
@@ -129,33 +145,16 @@ fun SuccessScreen(
 @Composable
 fun ListaResultados(
     profesionales: List<Professionals>,
-    parametroBusqueda: String,
     onProfessionalClick: (Professionals) -> Unit,
 ) {
-    val listaFiltrada =
-        if (parametroBusqueda.trim().isEmpty()) {
-            profesionales
-        } else {
-            profesionales.filter { profesional ->
-
-                profesional.profession.contains(parametroBusqueda.trim(), ignoreCase = true) ||
-                    profesional.name.contains(parametroBusqueda.trim(), ignoreCase = true) ||
-                    profesional.services.any { service ->
-                        service.contains(parametroBusqueda.trim(), ignoreCase = true)
-                    }
-            }
-        }
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(listaFiltrada) { profesional ->
-            if (profesional.id != UserId.ID) {
-                CardProfessionalSearch(
-                    P = profesional,
-                    onItemClick = onProfessionalClick,
-                )
-            }
+        items(profesionales) { profesional ->
+            CardProfessionalSearch(
+                P = profesional,
+                onItemClick = onProfessionalClick,
+            )
         }
         item {
             Spacer(modifier = Modifier.height(10.dp))
