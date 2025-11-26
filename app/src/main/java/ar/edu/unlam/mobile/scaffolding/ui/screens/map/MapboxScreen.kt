@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -90,11 +91,11 @@ fun MapboxScreen(
         }
     }
 
-    // Render de mapa según modo
     if (profesionalId == null) {
         MapaCompleto(
             cameraState = cameraState,
             puntos = puntos,
+            permisoUbicacion = permiso,
         )
     } else {
         destino.value?.let { dest ->
@@ -110,15 +111,8 @@ fun MapboxScreen(
 fun MapaCompleto(
     cameraState: CameraPositionState,
     puntos: List<LatLng>,
+    permisoUbicacion: PermissionState,
 ) {
-    val permisoUbicacion =
-        rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    // Pedir permiso al entrar
-    LaunchedEffect(Unit) {
-        permisoUbicacion.launchPermissionRequest()
-    }
-
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraState,

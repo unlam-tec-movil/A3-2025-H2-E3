@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.Properties
 
 
 plugins {
@@ -38,10 +37,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        val localProps = Properties()
-        localProps.load(project.rootProject.file("local.properties").inputStream())
-        val apiKey = localProps.getProperty("MAPS_API_KEY")
     }
 
     buildTypes {

@@ -27,7 +27,7 @@ class MapScreenViewModel
 
         private val _ubicacionActual =
             MutableStateFlow(
-                LatLng(-34.603722, -58.381592), // fallback (Obelisco)
+                LatLng(-34.603722, -58.381592),
             )
         val ubicacionActual = _ubicacionActual.asStateFlow()
         private val _routePoints = MutableStateFlow<List<LatLng>>(emptyList())
@@ -36,7 +36,7 @@ class MapScreenViewModel
         private val _uiState = MutableStateFlow(SearchUiState())
         val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-        val apiKey = "AIzaSyAMsvwQd-AYp436UM5XM"
+        val apiKey = "AIzaSyAMsvwQdn-AYp436UM5XM"
 
         // reemplazar guion de arriba por: nU8wQQpbOjiemt0
         fun actualizarUbicacion() {
