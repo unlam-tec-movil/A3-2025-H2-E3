@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,16 +43,14 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.Profession
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
-import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
-
-const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFja3U5NSIsImEiOiJjbWhucDNsNW0wMnp1Mmtwemg1dGNyb2Z1In0.dGrMielTiHaXoWTd38nYUQ"
+import java.util.Properties
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapboxOptions.accessToken = MAPBOX_ACCESS_TOKEN
+
         setContent {
             ScaffoldingV2Theme {
                 // A surface container using the 'background' color from the theme

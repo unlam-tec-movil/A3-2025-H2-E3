@@ -1,6 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
+
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -36,6 +38,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val localProps = Properties()
+        localProps.load(project.rootProject.file("local.properties").inputStream())
+        val apiKey = localProps.getProperty("MAPS_API_KEY")
     }
 
     buildTypes {
@@ -47,22 +53,29 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
-
 dependencies {
 
+    // ===== AndroidX y Compose =====
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -75,6 +88,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.room.common.jvm)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -82,8 +96,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
-    // Dagger + Hilt
+    // ===== Hilt =====
     implementation(libs.google.dagger.hilt.android)
     ksp(libs.androidx.room.compiler)
     ksp(libs.google.dagger.hilt.android.compiler)
@@ -92,30 +108,24 @@ dependencies {
     androidTestImplementation(libs.google.dagger.hilt.android.testing)
     testImplementation(libs.google.dagger.hilt.android.testing)
 
-    // Retrofit
+    // ===== Networking =====
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-
-    // OkHttp Logging Interceptor
     implementation(libs.okhttp.logging)
 
-    // Coroutines
+    // ===== Coroutines =====
     implementation(libs.kotlinx.coroutines.android)
 
-    // ViewModel con Compose
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-    // collectAsStateWithLifecycle
-    implementation(libs.androidx.lifecycle.runtime.compose)
-
+    // ===== Coil =====
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
 
+    // ===== Firebase =====
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
-
-    // Firebase Storage
     implementation("com.google.firebase:firebase-storage-ktx")
-    // SDK principal de Mapbox y dependencias
-    implementation("com.mapbox.maps:android:11.16.4")
-    implementation("com.mapbox.extension:maps-compose:11.16.4")
+
+    // Google maps
+    implementation("com.google.maps.android:maps-compose:4.3.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation(libs.accompanist.permissions)
 }
