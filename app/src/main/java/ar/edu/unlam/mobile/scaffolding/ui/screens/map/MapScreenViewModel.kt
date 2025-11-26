@@ -36,7 +36,7 @@ class MapScreenViewModel
         private val _uiState = MutableStateFlow(SearchUiState())
         val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-        val apiKey = "AIzaSyAMsvwQdn-AYp436UM5XM"
+        val apiKey = "AIzaSyAMsvwQdnU8wQQpbOjiemt0AYp436UM5XM"
 
         // reemplazar guion de arriba por: nU8wQQpbOjiemt0
         fun actualizarUbicacion() {

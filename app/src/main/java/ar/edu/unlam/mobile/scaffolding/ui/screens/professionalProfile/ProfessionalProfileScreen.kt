@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.AboutSection
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ActionButtons
+import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.FloatingMotionButton
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.KeyInfo
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileHeader
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.ProfileTab
@@ -219,6 +220,14 @@ fun ProfessionalProfileScreen(
                 }
             }
         }
+
+        // Icono flotante con animación de movimiento
+        FloatingMotionButton(
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp, 70.dp, 16.dp, 16.dp),
+        )
 
         // Solo se muestra en la pestaña REVIEW
         if (selectedTab == ProfileTab.REVIEW) {
