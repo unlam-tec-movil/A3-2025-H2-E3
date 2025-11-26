@@ -25,7 +25,7 @@ fun BottomBar(controller: NavHostController) {
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Newspaper,
-                    contentDescription = "feed"
+                    contentDescription = "feed",
                 )
             },
         )
@@ -36,7 +36,7 @@ fun BottomBar(controller: NavHostController) {
             icon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Home"
+                    contentDescription = "Home",
                 )
             },
         )
@@ -47,7 +47,7 @@ fun BottomBar(controller: NavHostController) {
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Map,
-                    contentDescription = "map"
+                    contentDescription = "map",
                 )
             },
         )
@@ -58,7 +58,7 @@ fun BottomBar(controller: NavHostController) {
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.PersonOutline,
-                    contentDescription = "User"
+                    contentDescription = "User",
                 )
             },
         )

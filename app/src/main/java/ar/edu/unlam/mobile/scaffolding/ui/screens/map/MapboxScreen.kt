@@ -76,9 +76,10 @@ fun MapboxScreen(
                     destino.value = professionalLocation
                     // Mueve la camara una sola vez al destino
                     cameraState.move(
-                        update = CameraUpdateFactory.newCameraPosition(
-                            CameraPosition.fromLatLngZoom(professionalLocation, 14f),
-                        ),
+                        update =
+                            CameraUpdateFactory.newCameraPosition(
+                                CameraPosition.fromLatLngZoom(professionalLocation, 14f),
+                            ),
                     )
                 }
             }
@@ -102,8 +103,7 @@ fun MapboxScreen(
             profesionales = profesionales,
         )
     } else {
-        destino.value?.let {
-            dest ->
+        destino.value?.let { dest ->
             MapaConRuta(
                 modifier = modifier,
                 destino = dest,
@@ -143,12 +143,14 @@ fun MapaCompleto(
 
                 LaunchedEffect(profesional.imgUrl) {
                     val loader = ImageLoader(context)
-                    val request = ImageRequest.Builder(context)
-                        .data(profesional.imgUrl)
-                        .allowHardware(false)
-                        .size(128, 128)
-                        .transformations(CircleCropTransformation())
-                        .build()
+                    val request =
+                        ImageRequest
+                            .Builder(context)
+                            .data(profesional.imgUrl)
+                            .allowHardware(false)
+                            .size(128, 128)
+                            .transformations(CircleCropTransformation())
+                            .build()
 
                     val result = loader.execute(request)
                     if (result is SuccessResult) {
@@ -161,9 +163,10 @@ fun MapaCompleto(
                     state = MarkerState(position = professionalLatLng),
                     title = profesional.name,
                     snippet = profesional.profession,
-                    icon = bitmapDescriptor ?: BitmapDescriptorFactory.defaultMarker(
-                        (abs(profesional.id.hashCode()) % 360).toFloat(),
-                    ),
+                    icon =
+                        bitmapDescriptor ?: BitmapDescriptorFactory.defaultMarker(
+                            (abs(profesional.id.hashCode()) % 360).toFloat(),
+                        ),
                 )
             }
         }

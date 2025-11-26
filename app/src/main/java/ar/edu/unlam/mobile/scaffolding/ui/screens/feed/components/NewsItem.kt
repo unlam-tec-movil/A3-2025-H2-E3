@@ -1,6 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.feed.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,15 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ar.edu.unlam.mobile.scaffolding.R
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.getRelativeTime
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -54,10 +50,11 @@ fun NewsItem(
     ) {
         HorizontalDivider()
         Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 12.dp),
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 12.dp),
         ) {
             // Header con nombre y profesión
             Row(modifier = Modifier.fillMaxWidth().clickable(onClick = onProfessionalClick)) {
@@ -67,16 +64,17 @@ fun NewsItem(
                 ) {
                     // Avatar
                     Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape),
+                        modifier =
+                            Modifier
+                                .size(40.dp)
+                                .clip(CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
                         AsyncImage(
                             model = userImgUrl,
                             contentDescription = "imagen de perfil del profesional",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                     }
 
@@ -118,15 +116,18 @@ fun NewsItem(
                 Spacer(modifier = Modifier.height(8.dp))
                 // Imagen de la publicación
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imgUrl)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(imgUrl)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = "imagen de la novedad",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(5.dp)),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(5.dp)),
                     contentScale = ContentScale.Crop,
                 )
             }
