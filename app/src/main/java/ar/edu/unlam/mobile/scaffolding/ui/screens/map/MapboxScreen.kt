@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
@@ -93,12 +94,14 @@ fun MapboxScreen(
     // Render de mapa según modo
     if (profesionalId == null) {
         MapaCompleto(
+            modifier = modifier, // Pasamos el modifier que contiene el padding
             cameraState = cameraState,
             puntos = puntos,
         )
     } else {
         destino.value?.let { dest ->
             MapaConRuta(
+                modifier = modifier, // Pasamos el modifier que contiene el padding
                 destino = dest,
             )
         }
@@ -108,6 +111,7 @@ fun MapboxScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapaCompleto(
+    modifier: Modifier = Modifier, // Aceptamos el modifier
     cameraState: CameraPositionState,
     puntos: List<LatLng>,
 ) {
@@ -120,12 +124,13 @@ fun MapaCompleto(
     }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier, // Usamos el modifier que viene con el padding
         cameraPositionState = cameraState,
         properties =
             MapProperties(
                 isMyLocationEnabled = permisoUbicacion.status.isGranted,
             ),
+        uiSettings = MapUiSettings(zoomControlsEnabled = true), // Habilitamos los controles de zoom
     ) {
         puntos.forEach { punto ->
             Marker(
@@ -139,6 +144,7 @@ fun MapaCompleto(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapaConRuta(
+    modifier: Modifier = Modifier, // Aceptamos el modifier
     destino: LatLng,
     viewModel: MapScreenViewModel = hiltViewModel(),
 ) {
@@ -170,9 +176,10 @@ fun MapaConRuta(
         }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier, // Usamos el modifier que viene con el padding
         cameraPositionState = cameraState,
         properties = MapProperties(isMyLocationEnabled = permiso.status.isGranted),
+        uiSettings = MapUiSettings(zoomControlsEnabled = true), // Habilitamos los controles de zoom
     ) {
         Marker(
             state = MarkerState(destino),
