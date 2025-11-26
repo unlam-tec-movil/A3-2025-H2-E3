@@ -1,5 +1,6 @@
 package ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.components.galery
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,15 @@ fun GalleryItemCard(
     modifier: Modifier = Modifier,
     isProfileHV: Boolean,
     onDeleteClick: (() -> Unit)? = null,
+    onImageClick: (() -> Unit)? = null,
 ) {
     Card(
-        modifier = modifier,
+        modifier =
+            modifier
+                .clickable(
+                    enabled = onImageClick != null,
+                    onClick = { onImageClick?.invoke() },
+                ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(if (isProfileHV) 8.dp else 5.dp),
         colors =
@@ -50,7 +57,6 @@ fun GalleryItemCard(
                 modifier = Modifier.fillMaxSize(),
             )
 
-            // Botón de eliminar (solo visible en perfil propio y cuando hay función de eliminación)
             if (onDeleteClick != null) {
                 IconButton(
                     onClick = onDeleteClick,

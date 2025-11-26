@@ -134,7 +134,7 @@ fun MainScreen() {
     ) { paddingValue ->
         // NavHost es el componente que funciona como contenedor de los otros componentes que
         // podrán ser destinos de navegación.
-        NavHost(navController = controller, startDestination = "introduction") {
+        NavHost(navController = controller, startDestination = "feed") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
             composable("successScreen") {
@@ -148,14 +148,11 @@ fun MainScreen() {
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id") ?: ""
-                // var ubicacion =
+
                 ProfessionalProfileScreen(
                     modifier = Modifier.padding(paddingValue),
                     viewModel = hiltViewModel(backStackEntry),
                     navController = controller,
-                    onHowToGetThere = { profesionalId ->
-                        controller.navigate("map?id=$id")
-                    },
                 )
             }
 
@@ -220,23 +217,8 @@ fun MainScreen() {
                 )
             }
 
-            composable(
-                route = "map?id={profesionalId}",
-                arguments =
-                    listOf(
-                        navArgument("profesionalId") {
-                            type = NavType.StringType
-                            defaultValue = null
-                            nullable = true
-                        },
-                    ),
-            ) { backStackEntry ->
-                val idRecibido = backStackEntry.arguments?.getString("profesionalId")
-
-                MapboxScreen(
-                    modifier = Modifier.padding(paddingValue),
-                    profesionalId = idRecibido,
-                )
+            composable(route = "map") {
+                MapboxScreen(modifier = Modifier.padding(paddingValue))
             }
         }
     }

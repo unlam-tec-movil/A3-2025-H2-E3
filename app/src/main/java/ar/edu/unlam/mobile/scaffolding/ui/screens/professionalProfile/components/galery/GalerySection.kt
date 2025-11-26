@@ -43,11 +43,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+// Galeria
 @Composable
 fun GallerySection(
     modifier: Modifier = Modifier,
     isProfileHV: Boolean = false,
     userIdGalery: String = "",
+    onImageClick: (String) -> Unit = {}, // Nuevo parámetro para manejar el click
 ) {
     val context = LocalContext.current
     val storageRepository = remember { StorageRepository() }
@@ -203,6 +205,9 @@ fun GallerySection(
                             } else {
                                 null
                             },
+                        onImageClick = {
+                            onImageClick(imageUrl) // Pasar el click al padre
+                        },
                     )
                 }
             }
