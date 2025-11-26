@@ -36,8 +36,9 @@ class MapScreenViewModel
         private val _uiState = MutableStateFlow(SearchUiState())
         val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-        val apiKey = "AIzaSyAMsvwQdnU8wQQpbOjiemt0AYp436UM5XM"
+        val apiKey = "AIzaSyAMsvwQd-AYp436UM5XM"
 
+        // reemplazar guion de arriba por: nU8wQQpbOjiemt0
         fun actualizarUbicacion() {
             try {
                 fusedLocation.lastLocation.addOnSuccessListener { loc ->

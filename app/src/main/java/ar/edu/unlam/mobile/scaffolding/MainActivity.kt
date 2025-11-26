@@ -1,6 +1,5 @@
 package ar.edu.unlam.mobile.scaffolding
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,7 +43,6 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Properties
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
