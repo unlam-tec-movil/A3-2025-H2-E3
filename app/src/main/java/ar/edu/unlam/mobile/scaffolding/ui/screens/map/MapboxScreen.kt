@@ -60,6 +60,10 @@ fun MapboxScreen(
 
     val destino = remember { mutableStateOf<LatLng?>(null) }
 
+    // Unica fuente de verdad para el estado de la camara
+    val cameraState = rememberCameraPositionState()
+
+    // Efecto para posicionar la camara cuando hay un destino
     LaunchedEffect(profesionalId, profesionales) {
         if (profesionalId != null) {
             val profesional = profesionales.firstOrNull { it.id == profesionalId }
@@ -68,16 +72,22 @@ fun MapboxScreen(
                 val lon = profesional.location[0].toDoubleOrNull()
                 val lat = profesional.location[1].toDoubleOrNull()
                 if (lon != null && lat != null) {
-                    destino.value = LatLng(lat, lon)
+                    val professionalLocation = LatLng(lat, lon)
+                    destino.value = professionalLocation
+                    // Mueve la camara una sola vez al destino
+                    cameraState.move(
+                        update = CameraUpdateFactory.newCameraPosition(
+                            CameraPosition.fromLatLngZoom(professionalLocation, 14f),
+                        ),
+                    )
                 }
             }
         }
     }
 
-    val cameraState = rememberCameraPositionState()
-
+    // Efecto para animar a la ubicacion del usuario, solo en el mapa general
     LaunchedEffect(origin) {
-        if (origin.latitude != 0.0 && origin.longitude != 0.0) {
+        if (profesionalId == null && origin.latitude != 0.0 && origin.longitude != 0.0) {
             cameraState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(origin, 12f),
                 durationMs = 1200,
@@ -97,6 +107,7 @@ fun MapboxScreen(
             MapaConRuta(
                 modifier = modifier,
                 destino = dest,
+                cameraState = cameraState, // Pasa el estado unico de la camara
             )
         }
     }
@@ -134,8 +145,8 @@ fun MapaCompleto(
                     val loader = ImageLoader(context)
                     val request = ImageRequest.Builder(context)
                         .data(profesional.imgUrl)
-                        .allowHardware(false) // Necesario para convertir a Bitmap
-                        .size(128, 128) // Tamaño del icono del marcador
+                        .allowHardware(false)
+                        .size(128, 128)
                         .transformations(CircleCropTransformation())
                         .build()
 
@@ -151,8 +162,8 @@ fun MapaCompleto(
                     title = profesional.name,
                     snippet = profesional.profession,
                     icon = bitmapDescriptor ?: BitmapDescriptorFactory.defaultMarker(
-                        (abs(profesional.id.hashCode()) % 360).toFloat()
-                    )
+                        (abs(profesional.id.hashCode()) % 360).toFloat(),
+                    ),
                 )
             }
         }
@@ -164,6 +175,7 @@ fun MapaCompleto(
 fun MapaConRuta(
     modifier: Modifier = Modifier,
     destino: LatLng,
+    cameraState: CameraPositionState, // Recibe el estado de la camara
     viewModel: MapScreenViewModel = hiltViewModel(),
 ) {
     val apiKey = viewModel.apiKey
@@ -186,11 +198,9 @@ fun MapaConRuta(
         viewModel.loadRoute(ubicacionActual, destino, apiKey)
     }
 
-    val cameraState = rememberCameraPositionState { position = CameraPosition.fromLatLngZoom(ubicacionActual, 14f) }
-
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = cameraState,
+        cameraPositionState = cameraState, // Usa el estado de la camara recibido
         properties = MapProperties(isMyLocationEnabled = permiso.status.isGranted),
         uiSettings = MapUiSettings(zoomControlsEnabled = true),
     ) {

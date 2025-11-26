@@ -1,5 +1,8 @@
 package ar.edu.unlam.mobile.scaffolding
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,8 +21,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -48,7 +53,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ScaffoldingV2Theme {
                 // A surface container using the 'background' color from the theme
@@ -150,13 +155,30 @@ fun MainScreen() {
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id") ?: ""
-                // var ubicacion =
+                val context = LocalContext.current
                 ProfessionalProfileScreen(
                     modifier = Modifier.padding(paddingValue),
                     viewModel = hiltViewModel(backStackEntry),
                     navController = controller,
                     onHowToGetThere = { profesionalId ->
                         controller.navigate("map?id=$id")
+                    },
+                    onWhatsApp = {
+                        val appPackageName = "com.whatsapp"
+                        try {
+                            val intent = context.packageManager.getLaunchIntentForPackage(appPackageName)
+                            if (intent != null) {
+                                context.startActivity(intent)
+                            } else {
+                                throw ActivityNotFoundException()
+                            }
+                        } catch (e: ActivityNotFoundException) {
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                            } catch (anfe: ActivityNotFoundException) {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+                            }
+                        }
                     },
                 )
             }
