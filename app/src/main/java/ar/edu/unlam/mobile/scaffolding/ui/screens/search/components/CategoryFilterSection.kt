@@ -11,22 +11,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview
 @Composable
-fun CategoryFilterSection() {
-    val categories = listOf("Todos", "Plomeros", "Electricistas", "Gasis")
-    var selectedCategory by remember { mutableStateOf("Todos") }
+fun CategoryFilterSection(
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit,
+) {
+    val categories = listOf("Todos", "Plomería", "Electricidad", "Jardinería", "Carpintería", "pintura", "Cerrajería", "Mecánica")
 
     LazyRow(
         modifier =
@@ -38,7 +36,7 @@ fun CategoryFilterSection() {
             CategoryChip(
                 text = category,
                 isSelected = category == selectedCategory,
-                onSelected = { selectedCategory = category },
+                onSelected = { onCategorySelected(category) },
             )
         }
     }

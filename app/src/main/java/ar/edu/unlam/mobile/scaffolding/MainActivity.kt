@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,8 +30,6 @@ import androidx.navigation.navArgument
 import ar.edu.unlam.mobile.scaffolding.domain.classes.ShakeDetectorComposable
 import ar.edu.unlam.mobile.scaffolding.ui.components.BottomBar
 import ar.edu.unlam.mobile.scaffolding.ui.components.SnackbarVisualsWithError
-import ar.edu.unlam.mobile.scaffolding.ui.screens.HomeScreen
-import ar.edu.unlam.mobile.scaffolding.ui.screens.UserScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.editUser.EditProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.feed.FeedScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.introduction.IntroductionScreen
@@ -41,6 +38,7 @@ import ar.edu.unlam.mobile.scaffolding.ui.screens.news.CreateNewsScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.professionalProfile.ProfessionalProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.profile.ProfileScreen
 import ar.edu.unlam.mobile.scaffolding.ui.screens.review.ReviewScreen
+import ar.edu.unlam.mobile.scaffolding.ui.screens.search.SuccessScreen
 import ar.edu.unlam.mobile.scaffolding.ui.theme.ScaffoldingV2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -139,8 +137,8 @@ fun MainScreen() {
         NavHost(navController = controller, startDestination = "introduction") {
             // composable es el componente que se usa para definir un destino de navegación.
             // Por parámetro recibe la ruta que se utilizará para navegar a dicho destino.
-            composable("home") {
-                HomeScreen(
+            composable("successScreen") {
+                SuccessScreen(
                     modifier = Modifier.padding(paddingValue),
                     navController = controller,
                 )
@@ -220,13 +218,6 @@ fun MainScreen() {
                     { controller.navigate("feed") },
                     modifier = Modifier.padding(bottom = 50.dp),
                 )
-            }
-            composable(
-                route = "user/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.StringType }),
-            ) { navBackStackEntry ->
-                val id = navBackStackEntry.arguments?.getString("id") ?: "1"
-                UserScreen(userId = id, modifier = Modifier.padding(paddingValue))
             }
 
             composable(
