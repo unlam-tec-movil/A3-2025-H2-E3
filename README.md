@@ -1,5 +1,12 @@
 g# Mobile Scaffolding
-
+api_key de maps:
+mapScreenViewModel linea 39
+val apiKey = "AIzaSyAMsvwQ
+-------
+dnU8wQQpbOjiemt
+----------
+0AYp436UM5XM"
+----------
 ## Index
 
 - [Configuración](#configuration)
