@@ -50,12 +50,12 @@ fun ReviewSection(
             modifier =
                 modifier
                     .fillMaxWidth()
-                    .height(300.dp),
+                    .height(150.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Sin Reseñas Encontradas",
+                text = "Sin reseñas encontradas",
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 18.sp,
             )

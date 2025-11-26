@@ -43,11 +43,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+// Galeria
 @Composable
 fun GallerySection(
     modifier: Modifier = Modifier,
     isProfileHV: Boolean = false,
     userIdGalery: String = "",
+    onImageClick: (String) -> Unit = {}, // Nuevo parámetro para manejar el click
 ) {
     val context = LocalContext.current
     val storageRepository = remember { StorageRepository() }
@@ -116,7 +118,12 @@ fun GallerySection(
             if (isGranted) {
                 showCamera = true
             } else {
-                Toast.makeText(context, "Se necesita permiso de cámara para tomar fotos", Toast.LENGTH_LONG).show()
+                Toast
+                    .makeText(
+                        context,
+                        "Se necesita permiso de cámara para tomar fotos",
+                        Toast.LENGTH_LONG,
+                    ).show()
             }
         }
 
@@ -198,6 +205,9 @@ fun GallerySection(
                             } else {
                                 null
                             },
+                        onImageClick = {
+                            onImageClick(imageUrl) // Pasar el click al padre
+                        },
                     )
                 }
             }
@@ -224,26 +234,46 @@ fun GallerySection(
 
             val chunkedItems = galleryUrls.chunked(2)
 
-            chunkedItems.forEachIndexed { index, rowItems ->
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+            if (galleryUrls.isEmpty() && !isLoading) {
+                Column(
+                    modifier =
+                        modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    rowItems.forEach { item ->
-                        GalleryItemCard(
-                            imageUrl = item,
-                            modifier = Modifier.weight(1f),
-                            isProfileHV = isProfileHV,
-                            onDeleteClick = null, // No mostrar botón de eliminar en perfiles ajenos
-                        )
-                    }
-
-                    if (rowItems.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
+                    Text(
+                        text = "Sin imagenes encontradas",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 18.sp,
+                    )
                 }
-                if (index < chunkedItems.size - 1) {
-                    Spacer(modifier = Modifier.height(10.dp))
+            } else {
+                chunkedItems.forEachIndexed { index, rowItems ->
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        rowItems.forEach { item ->
+                            GalleryItemCard(
+                                imageUrl = item,
+                                modifier = Modifier.weight(1f),
+                                isProfileHV = isProfileHV,
+                                onDeleteClick = null, // No mostrar botón de eliminar en perfiles ajenos
+                            )
+                        }
+
+                        if (rowItems.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                    if (index < chunkedItems.size - 1) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             }
         }
@@ -323,7 +353,9 @@ private fun uploadImageToFirebase(
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Error al subir imagen: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast
+                    .makeText(context, "Error al subir imagen: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -345,7 +377,9 @@ private fun deleteImageFromFirebase(
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Error al eliminar imagen: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast
+                    .makeText(context, "Error al eliminar imagen: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
