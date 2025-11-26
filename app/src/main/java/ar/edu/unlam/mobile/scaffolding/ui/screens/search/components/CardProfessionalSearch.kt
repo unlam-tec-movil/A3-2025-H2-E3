@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ar.edu.unlam.mobile.scaffolding.domain.model.Professionals
 import ar.edu.unlam.mobile.scaffolding.ui.theme.LightPrimary
-import coil3.compose.AsyncImage
+import coil.compose.AsyncImage
 
 @Composable
 fun CardProfessionalSearch(

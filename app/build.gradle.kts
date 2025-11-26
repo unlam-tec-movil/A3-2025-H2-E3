@@ -112,8 +112,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // ===== Coil =====
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     // ===== Firebase =====
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
@@ -121,6 +120,7 @@ dependencies {
 
     // Google maps
     implementation("com.google.maps.android:maps-compose:4.3.0")
+    implementation("com.google.maps.android:maps-compose-widgets:4.3.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation(libs.accompanist.permissions)
 }
